@@ -1,0 +1,58 @@
+{
+  "name": "starnerz/laravel-daraja",
+  "description": "A laravel package for the Safaricom Daraja APIs.",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "daraja",
+    "mpesa",
+    "mpesa api"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "Stanley Mbaabu",
+      "email": "stanleykimathi@gmail.com",
+      "role": "Web Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.6",
+    "illuminate/support": "~5.6.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.6.0",
+    "phpunit/phpunit": "~7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Starnerz\\LaravelDaraja\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Starnerz\\LaravelDaraja\\Tests\\": "tests"
+    },
+    "files": [
+      "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
+    ]
+  },
+  "scripts": {
+    "phpunit": "phpunit"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Starnerz\\LaravelDaraja\\LaravelDarajaServiceProvider"
+      ],
+      "aliases": {
+        "MpesaApi": "Starnerz\\LaravelDaraja\\Facade"
+      }
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
