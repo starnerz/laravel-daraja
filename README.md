@@ -1,9 +1,9 @@
 # Laravel Daraja
 
 [![Build Status](https://travis-ci.org/starnerz/laravel-daraja.svg?branch=master)](https://travis-ci.org/starnerz/laravel-daraja)
-[![styleci](https://styleci.io/repos/CHANGEME/shield)](https://styleci.io/repos/CHANGEME)
+[![styleci](https://styleci.io/repos/126376478/shield)](https://styleci.io/repos/126376478)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/starnerz/laravel-daraja/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/starnerz/laravel-daraja/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/CHANGEME/mini.png)](https://insight.sensiolabs.com/projects/CHANGEME)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/1860b091-cafb-43f2-bf33-98fccdec9788/mini.png)](https://insight.sensiolabs.com/projects/1860b091-cafb-43f2-bf33-98fccdec9788)
 [![Coverage Status](https://coveralls.io/repos/github/starnerz/laravel-daraja/badge.svg?branch=master)](https://coveralls.io/github/starnerz/laravel-daraja?branch=master)
 
 [![Packagist](https://img.shields.io/packagist/v/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
