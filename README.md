@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/starnerz/laravel-daraja.svg?branch=master)](https://travis-ci.org/starnerz/laravel-daraja)
 [![styleci](https://styleci.io/repos/126376478/shield)](https://styleci.io/repos/126376478)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/starnerz/laravel-daraja/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/starnerz/laravel-daraja/?branch=master)
-
 [![Packagist](https://img.shields.io/packagist/v/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
 [![Packagist](https://poser.pugx.org/starnerz/laravel-daraja/d/total.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
 [![Packagist](https://img.shields.io/packagist/l/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
