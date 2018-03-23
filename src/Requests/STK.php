@@ -2,7 +2,6 @@
 
 namespace Starnerz\LaravelDaraja\Requests;
 
-
 use Starnerz\LaravelDaraja\MpesaApiClient;
 
 class STK extends MpesaApiClient
@@ -13,7 +12,6 @@ class STK extends MpesaApiClient
      * @var string
      */
     protected $stkEndpoint = 'mpesa/stkpush/v1/processrequest';
-
 
     /**
      * Safaricom Lipa Na Mpesa Online API transaction status

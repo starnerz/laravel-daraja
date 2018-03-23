@@ -96,7 +96,6 @@ class MpesaApiClient
         return Route::has($urlConfig) ? route($urlConfig) : $urlConfig;
     }
 
-
     /**
      * Get access token from Safaricom MPESA APIs.
      *

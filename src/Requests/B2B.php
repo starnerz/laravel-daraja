@@ -155,6 +155,7 @@ class B2B extends MpesaApiClient
     {
         $this->setCommandId('BusinessPayBill');
         $this->receiverIdentifierType = $this->identifier['paybill'];
+
         return $this->pay($payBillNo, $amount, $remarks, $accountReference);
     }
 
