@@ -111,5 +111,4 @@ class Balance extends MpesaApiClient
         ];
         return $this->call($this->queryEndPoint, ['json' => $parameters]);
     }
-
 }

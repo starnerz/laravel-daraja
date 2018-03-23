@@ -3,7 +3,6 @@
 namespace Starnerz\LaravelDaraja\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Route;
 use Starnerz\LaravelDaraja\Facades\MpesaApi;
 
 class RegisterC2BUrls extends Command
@@ -43,5 +42,4 @@ class RegisterC2BUrls extends Command
         MpesaAPI::c2b()->registerUrls($confirmation, $validation);
         $this->info('URLs registered successfully');
     }
-
 }

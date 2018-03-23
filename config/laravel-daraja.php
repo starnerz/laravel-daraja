@@ -145,4 +145,5 @@ return [
         'callback_url' => '',
         'pass_key' => env('DARAJA_PASS_KEY', ''),
     ],
+
 ];

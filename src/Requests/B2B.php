@@ -69,7 +69,6 @@ class B2B extends MpesaApiClient
      */
     protected $resultURL;
 
-
     /**
      * Necessary initializations for B2B transactions from the config file while
      * also initialize parent constructor.
@@ -172,6 +171,7 @@ class B2B extends MpesaApiClient
     {
         $this->setCommandId('BusinessBuyGoods');
         $this->receiverIdentifierType = $this->identifier['till'];
+
         return $this->pay($tillNo, $amount, $remarks);
     }
 

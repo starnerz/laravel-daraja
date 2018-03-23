@@ -14,14 +14,12 @@ class C2B extends MpesaApiClient
      */
     protected $urlRegistrationEndPoint = 'mpesa/c2b/v1/registerurl';
 
-
     /**
      * The Safaricom C2B API end point for simulating a C2B transaction.
      *
      * @var string
      */
     protected $simulationEndpoint = 'mpesa/c2b/v1/simulate';
-
 
     /**
      * The Safaricom C2B API command ID.
@@ -55,6 +53,7 @@ class C2B extends MpesaApiClient
             'ConfirmationURL' => $this->setUrl($confirmationUrl),
             'ValidationURL' => $this->setUrl($validationUrl),
         ];
+
         return $this->call($this->urlRegistrationEndPoint, ['json' => $parameters]);
     }
 
@@ -80,6 +79,7 @@ class C2B extends MpesaApiClient
     public function simulatePaymentToPaybill($phoneNumber, $amount, $reference, $shortCode = null)
     {
         $this->setCommandId('CustomerPayBillOnline');
+
         return $this->simulate($phoneNumber, $amount, $reference, $shortCode);
     }
 
@@ -95,6 +95,7 @@ class C2B extends MpesaApiClient
     public function simulatePaymentToTill($phoneNumber, $amount, $reference, $shortCode = null)
     {
         $this->setCommandId('CustomerBuyGoodsOnline');
+
         return $this->simulate($phoneNumber, $amount, $reference, $shortCode);
     }
 
@@ -116,6 +117,7 @@ class C2B extends MpesaApiClient
             'Msisdn' => $phoneNumber,
             'BillRefNumber' => $reference,
         ];
+
         return $this->call($this->simulationEndpoint, ['json' => $parameters]);
     }
 }

@@ -38,7 +38,6 @@ class MpesaApiClient
      */
     protected $accessToken;
 
-
     /**
      * Identifier organization Map on Safaricom MPESA APIs.
      *
@@ -49,7 +48,6 @@ class MpesaApiClient
         'till' => '2', // Till Number
         'paybill' => '4', // Shortcode
     ];
-
 
     /**
      * Make the initializations required to make calls to the Safaricom MPESA APIs
@@ -144,6 +142,7 @@ class MpesaApiClient
         $publicKey = file_get_contents(__DIR__.'/../cert.cer');
 
         openssl_public_encrypt($plaintext, $encrypted, $publicKey, OPENSSL_PKCS1_PADDING);
+
         return base64_encode($encrypted);
     }
 
@@ -164,6 +163,7 @@ class MpesaApiClient
 
         try {
             $response = $this->client->request($method, $url, $options);
+
             return json_decode($response->getBody()->getContents());
         } catch (ServerException $e) {
             $response = json_decode($e->getResponse()->getBody()->getContents());

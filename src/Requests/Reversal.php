@@ -2,7 +2,6 @@
 
 namespace Starnerz\LaravelDaraja\Requests;
 
-
 use Starnerz\LaravelDaraja\MpesaApiClient;
 
 class Reversal extends MpesaApiClient
@@ -118,5 +117,4 @@ class Reversal extends MpesaApiClient
 
         return $this->call($this->reversalEndPoint, ['json' => $parameters]);
     }
-
 }

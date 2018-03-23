@@ -27,7 +27,6 @@ class Transaction extends MpesaApiClient
      */
     protected $securityCredential;
 
-
     /**
      * The sender of the transaction.
      *
@@ -57,7 +56,6 @@ class Transaction extends MpesaApiClient
      * @var string
      */
     protected $queueTimeoutURL;
-
 
     /**
      * Transaction constructor.
@@ -107,6 +105,7 @@ class Transaction extends MpesaApiClient
     public function toPayBillStatus($transactionID, $remarks, $occasion = '')
     {
         $this->identifierType = $this->identifier['paybill'];
+
         return $this->status($transactionID, $remarks, $occasion);
     }
 
@@ -121,6 +120,7 @@ class Transaction extends MpesaApiClient
     public function toTillStatus($transactionID, $remarks, $occasion = '')
     {
         $this->identifierType = $this->identifier['till'];
+
         return $this->status($transactionID, $remarks, $occasion);
     }
 
@@ -135,9 +135,9 @@ class Transaction extends MpesaApiClient
     public function toMsisdnStatus($transactionID, $remarks, $occasion = '')
     {
         $this->identifierType = $this->identifier['msisdn'];
+
         return $this->status($transactionID, $remarks, $occasion);
     }
-
 
     /**
      * Check the transaction status from a msisdn number to a short code.
@@ -152,6 +152,7 @@ class Transaction extends MpesaApiClient
     {
         $this->partyA = $msisdn;
         $this->identifierType = $this->identifier['msisdn'];
+
         return $this->status($transactionID, $remarks, $occasion);
     }
 
@@ -178,6 +179,7 @@ class Transaction extends MpesaApiClient
             'Remarks' => $remarks,
             'Occasion' => $occasion,
         ];
+
         return $this->call($this->queryEndPoint, ['json' => $parameters]);
     }
 }

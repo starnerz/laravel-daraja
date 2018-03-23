@@ -32,7 +32,6 @@ class MpesaApi
         return new B2C();
     }
 
-
     /**
      * Initiate a balance enquiry.
      *

@@ -16,8 +16,8 @@ class STK extends MpesaApiClient
 
 
     /**
-     * Safaricom Lipa Na Mpesa Online API transaction status.
-     * end point
+     * Safaricom Lipa Na Mpesa Online API transaction status
+     * end point.
      *
      * @var string
      */
@@ -56,7 +56,6 @@ class STK extends MpesaApiClient
         $this->passKey = config('laravel-daraja.stk_push.pass_key');
         $this->callbackURL = $this->setUrl(config('laravel-daraja.stk_push.callback_url'));
     }
-
 
     /**
      * Set the business short code that will be used for the transaction.
@@ -152,5 +151,4 @@ class STK extends MpesaApiClient
 
         return $this->call($this->statusEndPoint, ['json' => $parameters]);
     }
-
 }
