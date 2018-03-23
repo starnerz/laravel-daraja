@@ -109,6 +109,7 @@ class Balance extends MpesaApiClient
             'QueueTimeOutURL' => $this->queueTimeoutURL,
             'ResultURL' => $this->resultURL,
         ];
+
         return $this->call($this->queryEndPoint, ['json' => $parameters]);
     }
 }
