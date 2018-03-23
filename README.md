@@ -39,6 +39,20 @@ Starnerz\LaravelDaraja\Facades\MpesaApi::class,
 php artisan vendor:publish --provider="Starnerz\LaravelDaraja\LaravelDarajaServiceProvider" --tag="config"
 ```
 
+Fill in all the details you will be requiring for your application. Here are the env variables for quick copy paste.
+
+```
+DARAJA_CONSUMER_KEY=
+DARAJA_CONSUMER_SECRET=
+
+DARAJA_INITIATOR_NAME=
+DARAJA_INITIATOR_CREDENTIAL=
+DARAJA_INITIATOR_SHORTCODE=
+
+DARAJA_STK_SHORTCODE=
+DARAJA_PASS_KEY=
+```
+
 ## Usage
 
 If you have not created your Safaricom API application yet you can create one at [Safaricom Developer][link-safaricom-developer]
