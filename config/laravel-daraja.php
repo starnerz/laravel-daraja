@@ -143,7 +143,7 @@ return [
     'stk_push' => [
         'short_code' => env('DARAJA_STK_SHORTCODE', ''),
         'callback_url' => '',
-        'pass_key' => env('DARAJA_PASS_KEY', ''),
+        'pass_key' => env('DARAJA_STK_PASS_KEY', ''),
     ],
 
 ];
