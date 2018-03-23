@@ -60,10 +60,8 @@ class MpesaApiClient
 
         $mode = config('laravel-daraja.mode');
 
-        $baseUrl = $this->removeLastSlash(config('laravel-daraja.base_uri.'.$mode));
-
         $options = [
-            'base_uri' => $baseUrl.'/',
+            'base_uri' => config('laravel-daraja.base_url.'.$mode),
             'verify' => $mode === 'sandbox' ? false : true,
         ];
 
@@ -71,17 +69,6 @@ class MpesaApiClient
         $this->consumerKey = config('laravel-daraja.consumer_key');
         $this->consumerSecret = config('laravel-daraja.consumer_secret');
         $this->getAccessToken();
-    }
-
-    /**
-     * Remove the last forward slush.
-     *
-     * @param string $url
-     * @return string
-     */
-    protected function removeLastSlash($url)
-    {
-        return str_replace_last('/', '', $url);
     }
 
     /**
