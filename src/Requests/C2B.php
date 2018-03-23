@@ -8,7 +8,7 @@ class C2B extends MpesaApiClient
 {
     /**
      * The Safaricom C2B API end point for registering the confirmation
-     * and validation URLs
+     * and validation URLs.
      *
      * @var string
      */
@@ -16,7 +16,7 @@ class C2B extends MpesaApiClient
 
 
     /**
-     * The Safaricom C2B API end point for simulating a C2B transaction
+     * The Safaricom C2B API end point for simulating a C2B transaction.
      *
      * @var string
      */
@@ -24,7 +24,7 @@ class C2B extends MpesaApiClient
 
 
     /**
-     * The Safaricom C2B API command ID
+     * The Safaricom C2B API command ID.
      *
      * @var string
      */
@@ -39,7 +39,7 @@ class C2B extends MpesaApiClient
     }
 
     /**
-     * Register the confirmation and validation URLs to the Safaricom C2B API
+     * Register the confirmation and validation URLs to the Safaricom C2B API.
      *
      * @param string $confirmationUrl
      * @param string $validationUrl
@@ -50,16 +50,16 @@ class C2B extends MpesaApiClient
     public function registerUrls($confirmationUrl, $validationUrl, $responseType = 'Completed', $shortCode = null)
     {
         $parameters = [
-            "ShortCode" => is_null($shortCode) ? config('laravel-daraja.initiator.short_code') : $shortCode,
-            "ResponseType" => $responseType,
-            "ConfirmationURL" => $this->setUrl($confirmationUrl),
-            "ValidationURL" => $this->setUrl($validationUrl)
+            'ShortCode' => is_null($shortCode) ? config('laravel-daraja.initiator.short_code') : $shortCode,
+            'ResponseType' => $responseType,
+            'ConfirmationURL' => $this->setUrl($confirmationUrl),
+            'ValidationURL' => $this->setUrl($validationUrl),
         ];
         return $this->call($this->urlRegistrationEndPoint, ['json' => $parameters]);
     }
 
     /**
-     * Set the command ID to be used for the transaction
+     * Set the command ID to be used for the transaction.
      *
      * @param string $commandId
      */
@@ -69,7 +69,7 @@ class C2B extends MpesaApiClient
     }
 
     /**
-     * Simulate customer payment to a pay bill number through Safaricom C2B API
+     * Simulate customer payment to a pay bill number through Safaricom C2B API.
      *
      * @param string $phoneNumber
      * @param string $amount
@@ -84,7 +84,7 @@ class C2B extends MpesaApiClient
     }
 
     /**
-     * Simulate customer payment to a till number through Safaricom C2B API
+     * Simulate customer payment to a till number through Safaricom C2B API.
      *
      * @param string $phoneNumber
      * @param string $amount
@@ -99,7 +99,7 @@ class C2B extends MpesaApiClient
     }
 
     /**
-     * Send the transaction to be simulated to the Safaricom C2B API
+     * Send the transaction to be simulated to the Safaricom C2B API.
      *
      * @param $phoneNumber
      * @param $amount
@@ -110,11 +110,11 @@ class C2B extends MpesaApiClient
     protected function simulate($phoneNumber, $amount, $reference, $shortCode = null)
     {
         $parameters = [
-            "ShortCode" => is_null($shortCode) ? config('laravel-daraja.initiator.short_code') : $shortCode,
-            "CommandID" => $this->commandID,
-            "Amount" => $amount,
-            "Msisdn" => $phoneNumber,
-            "BillRefNumber" => $reference
+            'ShortCode' => is_null($shortCode) ? config('laravel-daraja.initiator.short_code') : $shortCode,
+            'CommandID' => $this->commandID,
+            'Amount' => $amount,
+            'Msisdn' => $phoneNumber,
+            'BillRefNumber' => $reference,
         ];
         return $this->call($this->simulationEndpoint, ['json' => $parameters]);
     }

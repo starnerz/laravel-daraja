@@ -8,7 +8,7 @@ use Starnerz\LaravelDaraja\MpesaApiClient;
 class STK extends MpesaApiClient
 {
     /**
-     * Safaricom Lipa Na Mpesa Online API end point
+     * Safaricom Lipa Na Mpesa Online API end point.
      *
      * @var string
      */
@@ -16,7 +16,7 @@ class STK extends MpesaApiClient
 
 
     /**
-     * Safaricom Lipa Na Mpesa Online API transaction status
+     * Safaricom Lipa Na Mpesa Online API transaction status.
      * end point
      *
      * @var string
@@ -24,7 +24,7 @@ class STK extends MpesaApiClient
     protected $statusEndPoint = 'mpesa/stkpushquery/v1/query';
 
     /**
-     * Business short code that will receive money
+     * Business short code that will receive money.
      *
      * @var string
      */
@@ -32,7 +32,7 @@ class STK extends MpesaApiClient
 
     /**
      * The passkey associated with Lipa Na Mpesa Online Transactions
-     * for the short code
+     * for the short code.
      *
      * @var string
      */
@@ -40,7 +40,7 @@ class STK extends MpesaApiClient
 
     /**
      * The url that will handle the result of the transaction from
-     * the Saaricom Lipa Na Mpesa Online API
+     * the Saaricom Lipa Na Mpesa Online API.
      *
      * @var string
      */
@@ -59,7 +59,7 @@ class STK extends MpesaApiClient
 
 
     /**
-     * Set the business short code that will be used for the transaction
+     * Set the business short code that will be used for the transaction.
      *
      * @param string $code
      */
@@ -69,7 +69,7 @@ class STK extends MpesaApiClient
     }
 
     /**
-     * Set the pass key associated with the business short code set
+     * Set the pass key associated with the business short code set.
      *
      * @param string $key
      */
@@ -79,7 +79,7 @@ class STK extends MpesaApiClient
     }
 
     /**
-     * Set the URL which will hadle the result from the MPESA API
+     * Set the URL which will hadle the result from the MPESA API.
      *
      * @param string $url
      */
@@ -89,7 +89,7 @@ class STK extends MpesaApiClient
     }
 
     /**
-     * Generate the password to be used for the transaction
+     * Generate the password to be used for the transaction.
      *
      * @param string $shortCode
      * @param string $passKey
@@ -98,11 +98,11 @@ class STK extends MpesaApiClient
      */
     protected function generatePassword($shortCode, $passKey, $timestamp)
     {
-        return base64_encode($shortCode . $passKey . $timestamp);
+        return base64_encode($shortCode.$passKey.$timestamp);
     }
 
     /**
-     * Initiate an STK push to a Safaricom mobile number
+     * Initiate an STK push to a Safaricom mobile number.
      *
      * @param string $mobileNo
      * @param string $amount
@@ -116,24 +116,24 @@ class STK extends MpesaApiClient
         $timestamp = date('YmdHis');
 
         $parameters = [
-            "BusinessShortCode" => $this->shortCode,
-            "Password" => $this->generatePassword($this->shortCode, $this->passKey, $timestamp),
-            "Timestamp" => $timestamp,
-            "TransactionType" => "CustomerPayBillOnline",
-            "Amount" => $amount,
-            "PartyA" => $mobileNo,
-            "PartyB" => is_null($shortCode) ? $this->shortCode : $shortCode,
-            "PhoneNumber" => $mobileNo,
-            "CallBackURL" => $this->callbackURL,
-            "AccountReference" => $accountReference,
-            "TransactionDesc" => str_limit($description, 20, '')
+            'BusinessShortCode' => $this->shortCode,
+            'Password' => $this->generatePassword($this->shortCode, $this->passKey, $timestamp),
+            'Timestamp' => $timestamp,
+            'TransactionType' => 'CustomerPayBillOnline',
+            'Amount' => $amount,
+            'PartyA' => $mobileNo,
+            'PartyB' => is_null($shortCode) ? $this->shortCode : $shortCode,
+            'PhoneNumber' => $mobileNo,
+            'CallBackURL' => $this->callbackURL,
+            'AccountReference' => $accountReference,
+            'TransactionDesc' => str_limit($description, 20, ''),
         ];
 
         return $this->call($this->stkEndpoint, ['json' => $parameters]);
     }
 
     /**
-     * Check the status of a Lipa Na Mpesa Online Transaction
+     * Check the status of a Lipa Na Mpesa Online Transaction.
      *
      * @param string $checkoutRequestId
      * @param null|string $shortCode
@@ -144,10 +144,10 @@ class STK extends MpesaApiClient
         $timestamp = date('YmdHis');
 
         $parameters = [
-            "BusinessShortCode" => is_null($shortCode) ? $this->shortCode : $shortCode,
-            "Password" => $this->generatePassword($this->shortCode, $this->passKey, $timestamp),
-            "Timestamp" => $timestamp,
-            "CheckoutRequestID" => $checkoutRequestId
+            'BusinessShortCode' => is_null($shortCode) ? $this->shortCode : $shortCode,
+            'Password' => $this->generatePassword($this->shortCode, $this->passKey, $timestamp),
+            'Timestamp' => $timestamp,
+            'CheckoutRequestID' => $checkoutRequestId,
         ];
 
         return $this->call($this->statusEndPoint, ['json' => $parameters]);

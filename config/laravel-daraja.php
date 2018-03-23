@@ -51,7 +51,7 @@ return [
 
     'base_url' => [
         'sandbox' => 'https://sandbox.safaricom.co.ke',
-        'live' => ''
+        'live' => '',
     ],
 
     /*
@@ -70,7 +70,7 @@ return [
         'name' => env('DARAJA_INITIATOR_NAME', ''),
         'credential' => env('DARAJA_INITIATOR_CREDENTIAL', ''),
         'short_code' => env('DARAJA_INITIATOR_SHORTCODE', ''),
-        'type' => 'paybill'
+        'type' => 'paybill',
     ],
 
     /*
@@ -87,7 +87,7 @@ return [
 
     'c2b_url' => [
         'confirmation' => '',
-        'validation' => ''
+        'validation' => '',
     ],
 
     /*
@@ -106,7 +106,7 @@ return [
         'b2b' => '',
         'reversal' => '',
         'balance' => '',
-        'transaction_status' => ''
+        'transaction_status' => '',
     ],
 
     /*
@@ -126,7 +126,7 @@ return [
         'b2b' => '',
         'reversal' => '',
         'balance' => '',
-        'transaction_status' => ''
+        'transaction_status' => '',
     ],
 
     /*
@@ -143,6 +143,6 @@ return [
     'stk_push' => [
         'short_code' => env('DARAJA_STK_SHORTCODE', ''),
         'callback_url' => '',
-        'pass_key' => env('DARAJA_PASS_KEY', '')
-    ]
+        'pass_key' => env('DARAJA_PASS_KEY', ''),
+    ],
 ];

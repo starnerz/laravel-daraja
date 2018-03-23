@@ -10,10 +10,10 @@ use Starnerz\LaravelDaraja\Requests\Balance;
 use Starnerz\LaravelDaraja\Requests\Reversal;
 use Starnerz\LaravelDaraja\Requests\Transaction;
 
-class MpesaAPI
+class MpesaApi
 {
     /**
-     * Initiate a business to business transaction
+     * Initiate a business to business transaction.
      *
      * @return B2B
      */
@@ -23,7 +23,7 @@ class MpesaAPI
     }
 
     /**
-     * Initiate a business to customer transaction
+     * Initiate a business to customer transaction.
      *
      * @return B2C
      */
@@ -34,7 +34,7 @@ class MpesaAPI
 
 
     /**
-     * Initiate a balance enquiry
+     * Initiate a balance enquiry.
      *
      * @return Balance
      */
@@ -44,7 +44,7 @@ class MpesaAPI
     }
 
     /**
-     * Initialize a customer to business transaction
+     * Initialize a customer to business transaction.
      *
      * @return C2B
      */
@@ -54,7 +54,7 @@ class MpesaAPI
     }
 
     /**
-     * Initiate a transaction reversal
+     * Initiate a transaction reversal.
      *
      * @return Reversal
      */
@@ -64,7 +64,7 @@ class MpesaAPI
     }
 
     /**
-     * Initiate a transaction status check
+     * Initiate a transaction status check.
      *
      * @return Transaction
      */
@@ -74,7 +74,7 @@ class MpesaAPI
     }
 
     /**
-     * Initiate a LIPA NA MPESA ONLINE transaction using STK push
+     * Initiate a LIPA NA MPESA ONLINE transaction using STK push.
      *
      * @return STK
      */
@@ -82,6 +82,4 @@ class MpesaAPI
     {
         return new STK();
     }
-
-
 }

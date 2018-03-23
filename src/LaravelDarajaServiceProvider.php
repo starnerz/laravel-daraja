@@ -7,9 +7,9 @@ use Starnerz\LaravelDaraja\Commands\RegisterC2BUrls;
 class LaravelDarajaServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Package path to config
+     * Package path to config.
      */
-    const CONFIG_PATH = __DIR__ . '/../config/laravel-daraja.php';
+    const CONFIG_PATH = __DIR__.'/../config/laravel-daraja.php';
 
     /**
      * Perform post-registration booting of services.

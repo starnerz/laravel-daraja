@@ -7,14 +7,14 @@ use Starnerz\LaravelDaraja\MpesaApiClient;
 class Balance extends MpesaApiClient
 {
     /**
-     * Safaricom Balance API endpoint
+     * Safaricom Balance API endpoint.
      *
      * @var string
      */
     protected $queryEndPoint = 'mpesa/accountbalance/v1/query';
 
     /**
-     * The initiator name for the short enquiring for balance
+     * The initiator name for the short enquiring for balance.
      *
      * @var string
      */
@@ -22,14 +22,14 @@ class Balance extends MpesaApiClient
 
     /**
      * The encrypted security credential for the short code enquiring
-     * for the balance
+     * for the balance.
      *
      * @var string
      */
     protected $securityCredential;
 
     /**
-     * The URL where Safaricom Balance API will send result of the transaction
+     * The URL where Safaricom Balance API will send result of the transaction.
      *
      * @var string
      */
@@ -37,7 +37,7 @@ class Balance extends MpesaApiClient
 
     /**
      * The URL where Safaricom Balance API will send notification of the transaction
-     * timing out while in the Safaricom servers queue
+     * timing out while in the Safaricom servers queue.
      *
      * @var string
      */
@@ -51,13 +51,13 @@ class Balance extends MpesaApiClient
         parent::__construct();
         $this->initiatorName = config('laravel-daraja.initiator.name');
         $this->securityCredential = $this->securityCredential(config('laravel-daraja.intiator.credential'));
-        
+
         $this->resultURL = $this->setUrl(config('laravel-daraja.result_url.balance'));
         $this->queueTimeoutURL = $this->setUrl(config('laravel-daraja.queue_timeout_url.balance'));
     }
 
     /**
-     * Set initiator other than the one in the laravel-daraja config file
+     * Set initiator other than the one in the laravel-daraja config file.
      *
      * @param string $initiatorName
      * @param string $securityCredential
@@ -70,7 +70,7 @@ class Balance extends MpesaApiClient
 
     /**
      * Set the url that will handle the timeout response from the
-     * MPESA Balance API
+     * MPESA Balance API.
      *
      * @param string $url
      */
@@ -81,7 +81,7 @@ class Balance extends MpesaApiClient
 
     /**
      * Set the url that will handle the result of the transaction
-     * from the MPESA Balance API
+     * from the MPESA Balance API.
      *
      * @param string $url
      */
@@ -91,7 +91,7 @@ class Balance extends MpesaApiClient
     }
 
     /**
-     * Send the balance query to the Safaricom Account Balance API
+     * Send the balance query to the Safaricom Account Balance API.
      *
      * @param string $remarks
      * @param null|string $shortCode
@@ -100,14 +100,14 @@ class Balance extends MpesaApiClient
     public function query($remarks, $shortCode = null)
     {
         $parameters = [
-            "Initiator" => $this->initiatorName,
-            "SecurityCredential" => $this->securityCredential,
-            "CommandID" => "AccountBalance",
-            "PartyA" => is_null($shortCode) ? config('laravel-daraja.initiator.short_code') : $shortCode,
-            "IdentifierType" => "4",
-            "Remarks" => str_limit($remarks, 100, ''),
-            "QueueTimeOutURL" => $this->queueTimeoutURL,
-            "ResultURL" => $this->resultURL
+            'Initiator' => $this->initiatorName,
+            'SecurityCredential' => $this->securityCredential,
+            'CommandID' => 'AccountBalance',
+            'PartyA' => is_null($shortCode) ? config('laravel-daraja.initiator.short_code') : $shortCode,
+            'IdentifierType' => '4',
+            'Remarks' => str_limit($remarks, 100, ''),
+            'QueueTimeOutURL' => $this->queueTimeoutURL,
+            'ResultURL' => $this->resultURL,
         ];
         return $this->call($this->queryEndPoint, ['json' => $parameters]);
     }

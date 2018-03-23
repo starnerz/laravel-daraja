@@ -7,21 +7,21 @@ use Starnerz\LaravelDaraja\MpesaApiClient;
 class Transaction extends MpesaApiClient
 {
     /**
-     * The transaction status query end point on Safricom API
+     * The transaction status query end point on Safricom API.
      *
      * @var string
      */
     protected $queryEndPoint = 'mpesa/transactionstatus/v1/query';
 
     /**
-     * The initiator's name for the short code
+     * The initiator's name for the short code.
      *
      * @var string
      */
     protected $initiatorName;
 
     /**
-     * The encrypted initiator's security credential for the short code
+     * The encrypted initiator's security credential for the short code.
      *
      * @var string
      */
@@ -29,14 +29,14 @@ class Transaction extends MpesaApiClient
 
 
     /**
-     * The sender of the transaction
+     * The sender of the transaction.
      *
      * @var string
      */
     protected $partyA;
 
     /**
-     * Safaricom API identifier types for organization short code or MSISDN
+     * Safaricom API identifier types for organization short code or MSISDN.
      *
      * @var int
      */
@@ -44,7 +44,7 @@ class Transaction extends MpesaApiClient
 
     /**
      * The URL where Safaricom Transaction Status API will send result of the
-     * transaction
+     * transaction.
      *
      * @var string
      */
@@ -52,7 +52,7 @@ class Transaction extends MpesaApiClient
 
     /**
      * The URL where Safaricom Transaction Status API will send notification of
-     * the transaction timing out while in the Safaricom servers queue
+     * the transaction timing out while in the Safaricom servers queue.
      *
      * @var string
      */
@@ -74,7 +74,7 @@ class Transaction extends MpesaApiClient
     }
 
     /**
-     * Set different initiator from the one set in the laravel-daraja configurations
+     * Set different initiator from the one set in the laravel-daraja configurations.
      *
      * @param string $name
      * @param string $securityCredential
@@ -87,7 +87,7 @@ class Transaction extends MpesaApiClient
 
     /**
      * Set the business short code to use if you want to use a different one
-     * from the one set in the configs
+     * from the one set in the configs.
      *
      * @param string $code
      */
@@ -97,7 +97,7 @@ class Transaction extends MpesaApiClient
     }
 
     /**
-     * Check the transaction status from a business short code to a pay bill number
+     * Check the transaction status from a business short code to a pay bill number.
      *
      * @param string $transactionID
      * @param string $remarks
@@ -111,7 +111,7 @@ class Transaction extends MpesaApiClient
     }
 
     /**
-     * Check the transaction status from a business short code to a till number
+     * Check the transaction status from a business short code to a till number.
      *
      * @param string $transactionID
      * @param string $remarks
@@ -125,7 +125,7 @@ class Transaction extends MpesaApiClient
     }
 
     /**
-     * Check the transaction status from a business short code to a msisdn number
+     * Check the transaction status from a business short code to a msisdn number.
      *
      * @param string $transactionID
      * @param string $remarks
@@ -140,7 +140,7 @@ class Transaction extends MpesaApiClient
 
 
     /**
-     * Check the transaction status from a msisdn number to a short code
+     * Check the transaction status from a msisdn number to a short code.
      *
      * @param string $msisdn
      * @param string $transactionID
@@ -157,7 +157,7 @@ class Transaction extends MpesaApiClient
 
     /**
      * Send the transaction status query to the Safaricom Transaction
-     * Status API
+     * Status API.
      *
      * @param string $transactionId
      * @param string $remarks
@@ -167,16 +167,16 @@ class Transaction extends MpesaApiClient
     protected function status($transactionId, $remarks, $occasion = '')
     {
         $parameters = [
-            "Initiator" => $this->initiatorName,
-            "SecurityCredential" => $this->securityCredential,
-            "CommandID" => "TransactionStatusQuery",
-            "TransactionID" => $transactionId,
-            "PartyA" => $this->partyA,
-            "IdentifierType" => $this->identifierType,
-            "ResultURL" => $this->resultURL,
-            "QueueTimeOutURL" => $this->queueTimeoutURL,
-            "Remarks" => $remarks,
-            "Occasion" => $occasion
+            'Initiator' => $this->initiatorName,
+            'SecurityCredential' => $this->securityCredential,
+            'CommandID' => 'TransactionStatusQuery',
+            'TransactionID' => $transactionId,
+            'PartyA' => $this->partyA,
+            'IdentifierType' => $this->identifierType,
+            'ResultURL' => $this->resultURL,
+            'QueueTimeOutURL' => $this->queueTimeoutURL,
+            'Remarks' => $remarks,
+            'Occasion' => $occasion,
         ];
         return $this->call($this->queryEndPoint, ['json' => $parameters]);
     }

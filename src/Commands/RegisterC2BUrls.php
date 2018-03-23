@@ -23,7 +23,7 @@ class RegisterC2BUrls extends Command
     protected $description = 'Registers C2B URLs to the Safaricom C2B API';
 
     /**
-     * Create a new command instance.     *
+     * Create a new command instance.
      */
     public function __construct()
     {
@@ -44,15 +44,4 @@ class RegisterC2BUrls extends Command
         $this->info('URLs registered successfully');
     }
 
-    /**
-     * Check if it contains a route name and return full route or
-     * return the string assuming its a full URL
-     *
-     * @param $urlConfig
-     * @return string
-     */
-    protected function setUrl($urlConfig)
-    {
-        return Route::has($urlConfig) ? route($urlConfig) : $urlConfig;
-    }
 }
