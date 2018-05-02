@@ -108,7 +108,7 @@ class STK extends MpesaApiClient
      * @param null|string $shortCode short code receiving the money
      * @return mixed
      */
-    public function push($mobileNo, $amount, $description, $accountReference = '', $shortCode = null)
+    public function push($mobileNo, $amount, $description, $accountReference, $shortCode = null)
     {
         $timestamp = date('YmdHis');
 
