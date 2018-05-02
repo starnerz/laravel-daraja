@@ -40,22 +40,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Base URL
-    |--------------------------------------------------------------------------
-    |
-    | This value sets the base URL that the package will be using. An initial
-    | one for the sandbox has been set for you. Once your application is
-    | approved you will need to set set mode to live and the live URL.
-    |
-    */
-
-    'base_url' => [
-        'sandbox' => 'https://sandbox.safaricom.co.ke',
-        'live' => '',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Initiator Details
     |--------------------------------------------------------------------------
     |

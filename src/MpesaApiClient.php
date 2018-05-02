@@ -50,6 +50,16 @@ class MpesaApiClient
     ];
 
     /**
+     * Base URL end points for the Safaricom APIs.
+     *
+     * @var array
+     */
+    protected $base_url = [
+        'sandbox' => 'https://sandbox.safaricom.co.ke',
+        'live' => 'https://api.safaricom.co.ke',
+    ];
+
+    /**
      * Make the initializations required to make calls to the Safaricom MPESA APIs
      * and throw the necessary exception if there are any missing required
      * configurations.
@@ -61,7 +71,7 @@ class MpesaApiClient
         $mode = config('laravel-daraja.mode');
 
         $options = [
-            'base_uri' => config('laravel-daraja.base_url.'.$mode),
+            'base_uri' => $this->base_url[$mode],
             'verify' => $mode === 'sandbox' ? false : true,
         ];
 
