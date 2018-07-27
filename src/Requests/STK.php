@@ -104,7 +104,7 @@ class STK extends MpesaApiClient
      * @param string $mobileNo
      * @param string $amount
      * @param string $description
-     * @param string $accountReference Used with M-Pesa PayBills.
+     * @param string $accountReference
      * @param null|string $shortCode short code receiving the money
      * @return mixed
      */

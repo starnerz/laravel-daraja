@@ -62,13 +62,13 @@ Each Safaricom API except Oauth has been implemented as a class on its own which
 
 ``` php
 $STK = new STK();
-$STK->push('254727123456','10000','New Purchase');
+$STK->push('254727123456','10000','New Purchase','R3F3R3NC3');
 ```
 
 If you prefer using the facade
 
 ``` php
-MpesaApi::STK()->push('254727123456','10000','New Purchase');
+MpesaApi::STK()->push('254727123456','10000','New Purchase','R3F3R3NC3');
 ```
 
 If you will be using the C2B Api you can easily register the validation and confirmation URLs through artisan.
