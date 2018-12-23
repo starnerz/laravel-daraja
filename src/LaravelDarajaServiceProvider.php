@@ -9,7 +9,7 @@ class LaravelDarajaServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Package path to config.
      */
-    const CONFIG_PATH = __DIR__.'/../config/laravel-daraja.php';
+    const CONFIG_PATH = __DIR__ . '/../config/laravel-daraja.php';
 
     /**
      * Perform post-registration booting of services.
@@ -36,10 +36,7 @@ class LaravelDarajaServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            self::CONFIG_PATH,
-            'laravel-daraja'
-        );
+        $this->mergeConfigFrom(self::CONFIG_PATH, 'laravel-daraja');
 
         $this->app->bind('mpesa-api', function () {
             return new MpesaApi();

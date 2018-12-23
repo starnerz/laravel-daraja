@@ -130,4 +130,21 @@ return [
         'pass_key' => env('DARAJA_STK_PASS_KEY', ''),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | LOGS
+    |--------------------------------------------------------------------------
+    |
+    | Here you can set your logging requirements. If enabled a new file will
+    | will be created in the logs folder and will record all requests
+    | and responses to the Safaricom APIs. You can use the
+    | the Monolog debug levels.
+    |
+    */
+
+    'logs' => [
+        'enabled' => false,
+        'level' => 'DEBUG',
+    ],
+
 ];
