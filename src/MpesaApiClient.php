@@ -73,7 +73,7 @@ class MpesaApiClient
 
         $options = [
             'base_uri' => $this->base_url[$mode],
-            'verify' => $mode === 'sandbox' ? false : true
+            'verify' => $mode === 'sandbox' ? false : true,
         ];
 
         if (config('laravel-daraja.logs.enabled')) {
@@ -140,7 +140,7 @@ class MpesaApiClient
      */
     protected function securityCredential($plaintext)
     {
-        $publicKey = file_get_contents(__DIR__ . '/../cert.cer');
+        $publicKey = file_get_contents(__DIR__.'/../cert.cer');
 
         openssl_public_encrypt($plaintext, $encrypted, $publicKey, OPENSSL_PKCS1_PADDING);
 
@@ -159,7 +159,7 @@ class MpesaApiClient
     protected function call($url, $options = [], $method = 'POST')
     {
         if (isset($this->accessToken)) {
-            $options['headers'] = ['Authorization' => 'Bearer ' . $this->accessToken];
+            $options['headers'] = ['Authorization' => 'Bearer '.$this->accessToken];
         }
 
         try {
@@ -173,14 +173,14 @@ class MpesaApiClient
         } catch (ServerException $e) {
             $response = json_decode($e->getResponse()->getBody()->getContents());
             if (isset($response->Envelope)) {
-                $message = 'Safaricom APIs: ' . $response->Envelope->Body->Fault->faultstring;
+                $message = 'Safaricom APIs: '.$response->Envelope->Body->Fault->faultstring;
                 throw new MpesaApiRequestException($message, $e->getCode());
             }
-            throw new MpesaApiRequestException('Safaricom APIs: ' . $response->errorMessage, $e->getCode());
+            throw new MpesaApiRequestException('Safaricom APIs: '.$response->errorMessage, $e->getCode());
         } catch (ClientException $e) {
             $response = json_decode($e->getResponse()->getBody()->getContents());
             throw new MpesaApiRequestException('Safaricom APIs: '
-                . $response->errorMessage, $e->getCode());
+                .$response->errorMessage, $e->getCode());
         }
     }
 }
