@@ -2,11 +2,11 @@
 
 namespace Starnerz\LaravelDaraja\Logging;
 
-use Monolog\Logger;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class Log
 {
