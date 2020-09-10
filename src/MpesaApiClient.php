@@ -3,11 +3,11 @@
 namespace Starnerz\LaravelDaraja;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Route;
-use Starnerz\LaravelDaraja\Logging\Log;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use Illuminate\Support\Facades\Route;
 use Starnerz\LaravelDaraja\Exceptions\MpesaApiRequestException;
+use Starnerz\LaravelDaraja\Logging\Log;
 
 class MpesaApiClient
 {

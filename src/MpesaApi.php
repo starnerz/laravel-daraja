@@ -4,10 +4,10 @@ namespace Starnerz\LaravelDaraja;
 
 use Starnerz\LaravelDaraja\Requests\B2B;
 use Starnerz\LaravelDaraja\Requests\B2C;
-use Starnerz\LaravelDaraja\Requests\C2B;
-use Starnerz\LaravelDaraja\Requests\STK;
 use Starnerz\LaravelDaraja\Requests\Balance;
+use Starnerz\LaravelDaraja\Requests\C2B;
 use Starnerz\LaravelDaraja\Requests\Reversal;
+use Starnerz\LaravelDaraja\Requests\STK;
 use Starnerz\LaravelDaraja\Requests\Transaction;
 
 class MpesaApi
