@@ -108,7 +108,7 @@ class STK extends MpesaApiClient
      * @param null|string $shortCode short code receiving the money
      * @return mixed
      */
-    public function push($mobileNo, $amount, $description, $accountReference, $shortCode = null)
+    public function push($mobileNo, $amount, $description, $accountReference, $shortCode = null, $transactionType)
     {
         $timestamp = date('YmdHis');
 
@@ -116,7 +116,7 @@ class STK extends MpesaApiClient
             'BusinessShortCode' => $this->shortCode,
             'Password' => $this->generatePassword($this->shortCode, $this->passKey, $timestamp),
             'Timestamp' => $timestamp,
-            'TransactionType' => 'CustomerPayBillOnline',
+            'TransactionType' => $transactionType,
             'Amount' => $amount,
             'PartyA' => $mobileNo,
             'PartyB' => is_null($shortCode) ? $this->shortCode : $shortCode,
