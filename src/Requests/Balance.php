@@ -59,8 +59,8 @@ class Balance extends MpesaApiClient
     /**
      * Set initiator other than the one in the laravel-daraja config file.
      *
-     * @param string $initiatorName
-     * @param string $securityCredential
+     * @param  string  $initiatorName
+     * @param  string  $securityCredential
      */
     public function setInitiator($initiatorName, $securityCredential)
     {
@@ -72,7 +72,7 @@ class Balance extends MpesaApiClient
      * Set the url that will handle the timeout response from the
      * MPESA Balance API.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setQueueTimeoutURL($url)
     {
@@ -83,7 +83,7 @@ class Balance extends MpesaApiClient
      * Set the url that will handle the result of the transaction
      * from the MPESA Balance API.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setResultURL($url)
     {
@@ -93,8 +93,8 @@ class Balance extends MpesaApiClient
     /**
      * Send the balance query to the Safaricom Account Balance API.
      *
-     * @param string $remarks
-     * @param null|string $shortCode
+     * @param  string  $remarks
+     * @param  null|string  $shortCode
      * @return mixed
      */
     public function query($remarks, $shortCode = null)
