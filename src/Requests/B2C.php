@@ -73,8 +73,8 @@ class B2C extends MpesaApiClient
     /**
      * Set the initiator short code credentials.
      *
-     * @param string $name
-     * @param string $credential
+     * @param  string  $name
+     * @param  string  $credential
      */
     public function setInitiator($name, $credential)
     {
@@ -85,7 +85,7 @@ class B2C extends MpesaApiClient
     /**
      * Set the command ID used by the Safaricom B2C API.
      *
-     * @param string $command
+     * @param  string  $command
      */
     public function setCommandId($command)
     {
@@ -95,7 +95,7 @@ class B2C extends MpesaApiClient
     /**
      * Set the short code to be used for B2C transaction.
      *
-     * @param string $sender
+     * @param  string  $sender
      */
     public function setSender($sender)
     {
@@ -106,7 +106,7 @@ class B2C extends MpesaApiClient
      * Set the URI where Safaricom B2C API will send notification
      * transaction timed out on queue.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setQueTimeoutUrl($url)
     {
@@ -116,7 +116,7 @@ class B2C extends MpesaApiClient
     /**
      * Set the URI where Safaricom B2C API will send result of the transaction.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setResultUrl($url)
     {
@@ -126,10 +126,10 @@ class B2C extends MpesaApiClient
     /**
      * Make a request to Safaricom B2C API with command type SalaryPayment.
      *
-     * @param string $recipient
-     * @param int $amount
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $recipient
+     * @param  int  $amount
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed|string
      */
     public function salaryPayment($recipient, $amount, $remarks, $occasion = '')
@@ -142,10 +142,10 @@ class B2C extends MpesaApiClient
     /**
      * Make a request to Safaricom B2C API with command type BusinessPayment.
      *
-     * @param string $recipient
-     * @param int $amount
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $recipient
+     * @param  int  $amount
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed|string
      */
     public function businessPayment($recipient, $amount, $remarks, $occasion = '')
@@ -158,10 +158,10 @@ class B2C extends MpesaApiClient
     /**
      * Make a request to Safaricom B2C API with command type PromotionPayment.
      *
-     * @param string $recipient
-     * @param int $amount
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $recipient
+     * @param  int  $amount
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed|string
      */
     public function promotionPayment($recipient, $amount, $remarks, $occasion = '')
@@ -174,10 +174,10 @@ class B2C extends MpesaApiClient
     /**
      * Send transaction details to Safaricom B2C API.
      *
-     * @param string $recipient
-     * @param int $amount
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $recipient
+     * @param  int  $amount
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed|string
      */
     protected function pay($recipient, $amount, $remarks, $occasion = '')

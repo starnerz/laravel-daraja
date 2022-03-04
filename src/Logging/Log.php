@@ -61,6 +61,7 @@ class Log
      * Determine the log level specified in the configurations.
      *
      * @return mixed
+     *
      * @throws \Exception
      */
     protected static function getLogLevel()

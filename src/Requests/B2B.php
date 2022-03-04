@@ -89,8 +89,8 @@ class B2B extends MpesaApiClient
     /**
      * Set the initiator short code credentials.
      *
-     * @param string $name
-     * @param string $credential
+     * @param  string  $name
+     * @param  string  $credential
      */
     public function setInitiator($name, $credential)
     {
@@ -101,7 +101,7 @@ class B2B extends MpesaApiClient
     /**
      * Set the command ID used by the Safaricom B2B API.
      *
-     * @param string $command
+     * @param  string  $command
      */
     public function setCommandId($command)
     {
@@ -111,8 +111,8 @@ class B2B extends MpesaApiClient
     /**
      * Set the short code and type of code to be used for B2B transaction.
      *
-     * @param string $code
-     * @param string $type valid types are paybill, till, msisdn
+     * @param  string  $code
+     * @param  string  $type  valid types are paybill, till, msisdn
      */
     public function setShortCode($code, $type)
     {
@@ -124,7 +124,7 @@ class B2B extends MpesaApiClient
      * Set the URI where Safaricom B2B API will send notification
      * transaction timed out on queue.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setQueTimeoutUrl($url)
     {
@@ -134,7 +134,7 @@ class B2B extends MpesaApiClient
     /**
      * Set the URI where Safaricom B2B API will send result of the transaction.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setResultUrl($url)
     {
@@ -145,10 +145,10 @@ class B2B extends MpesaApiClient
      * Make a payment to a pay bill number from a business short code
      * which in this case is a Pay bill number or a till number.
      *
-     * @param string $payBillNo
-     * @param int $amount
-     * @param string $remarks
-     * @param string $accountReference
+     * @param  string  $payBillNo
+     * @param  int  $amount
+     * @param  string  $remarks
+     * @param  string  $accountReference
      * @return mixed
      */
     public function payToPayBill($payBillNo, $amount, $remarks, $accountReference = '')
@@ -163,9 +163,9 @@ class B2B extends MpesaApiClient
      * Make a payment to a lipa na mpesa till number from a business short code
      * which in this case is a Pay bill number or a till number.
      *
-     * @param string $tillNo
-     * @param int $amount
-     * @param string $remarks
+     * @param  string  $tillNo
+     * @param  int  $amount
+     * @param  string  $remarks
      * @return mixed
      */
     public function payToBuyGoods($tillNo, $amount, $remarks)
@@ -179,10 +179,10 @@ class B2B extends MpesaApiClient
     /**
      * Send transaction details to Safaricom B2B API.
      *
-     * @param string $business Till Number or short code
-     * @param int $amount
-     * @param string $remarks
-     * @param string $accountReference
+     * @param  string  $business  Till Number or short code
+     * @param  int  $amount
+     * @param  string  $remarks
+     * @param  string  $accountReference
      * @return mixed
      */
     protected function pay($business, $amount, $remarks, $accountReference = '')

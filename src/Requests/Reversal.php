@@ -58,8 +58,8 @@ class Reversal extends MpesaApiClient
     /**
      * Set initiator other than the one in the laravel-daraja config file.
      *
-     * @param string $initiatorName
-     * @param string $securityCredential
+     * @param  string  $initiatorName
+     * @param  string  $securityCredential
      */
     public function setInitiator($initiatorName, $securityCredential)
     {
@@ -71,7 +71,7 @@ class Reversal extends MpesaApiClient
      * Set the url that will handle the timeout response from the
      * MPESA Reversal API.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setQueueTimeoutURL($url)
     {
@@ -82,7 +82,7 @@ class Reversal extends MpesaApiClient
      * Set the url that will handle the result of the transaction
      * from the MPESA Reversal API.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setResultURL($url)
     {
@@ -92,11 +92,11 @@ class Reversal extends MpesaApiClient
     /**
      * Make a request to reverse a transaction to the Safaricom MPESA Reversal API.
      *
-     * @param string $transactionId
-     * @param string $amount
-     * @param string $remarks
-     * @param null|string $shortCode
-     * @param string $occasion
+     * @param  string  $transactionId
+     * @param  string  $amount
+     * @param  string  $remarks
+     * @param  null|string  $shortCode
+     * @param  string  $occasion
      * @return mixed
      */
     public function reverse($transactionId, $amount, $remarks, $shortCode = null, $occasion = '')

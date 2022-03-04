@@ -74,8 +74,8 @@ class Transaction extends MpesaApiClient
     /**
      * Set different initiator from the one set in the laravel-daraja configurations.
      *
-     * @param string $name
-     * @param string $securityCredential
+     * @param  string  $name
+     * @param  string  $securityCredential
      */
     public function setInitiator($name, $securityCredential)
     {
@@ -87,7 +87,7 @@ class Transaction extends MpesaApiClient
      * Set the business short code to use if you want to use a different one
      * from the one set in the configs.
      *
-     * @param string $code
+     * @param  string  $code
      */
     public function setShortCode($code)
     {
@@ -97,9 +97,9 @@ class Transaction extends MpesaApiClient
     /**
      * Check the transaction status from a business short code to a pay bill number.
      *
-     * @param string $transactionID
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $transactionID
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed
      */
     public function toPayBillStatus($transactionID, $remarks, $occasion = '')
@@ -112,9 +112,9 @@ class Transaction extends MpesaApiClient
     /**
      * Check the transaction status from a business short code to a till number.
      *
-     * @param string $transactionID
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $transactionID
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed
      */
     public function toTillStatus($transactionID, $remarks, $occasion = '')
@@ -127,9 +127,9 @@ class Transaction extends MpesaApiClient
     /**
      * Check the transaction status from a business short code to a msisdn number.
      *
-     * @param string $transactionID
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $transactionID
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed
      */
     public function toMsisdnStatus($transactionID, $remarks, $occasion = '')
@@ -142,10 +142,10 @@ class Transaction extends MpesaApiClient
     /**
      * Check the transaction status from a msisdn number to a short code.
      *
-     * @param string $msisdn
-     * @param string $transactionID
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $msisdn
+     * @param  string  $transactionID
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed
      */
     public function fromMsisdnStatus($msisdn, $transactionID, $remarks, $occasion = '')
@@ -160,9 +160,9 @@ class Transaction extends MpesaApiClient
      * Send the transaction status query to the Safaricom Transaction
      * Status API.
      *
-     * @param string $transactionId
-     * @param string $remarks
-     * @param string $occasion
+     * @param  string  $transactionId
+     * @param  string  $remarks
+     * @param  string  $occasion
      * @return mixed
      */
     protected function status($transactionId, $remarks, $occasion = '')

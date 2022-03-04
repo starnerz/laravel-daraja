@@ -136,6 +136,7 @@ class MpesaApiClient
      *
      * @param $plaintext
      * @return string
+     *
      * @internal param null|string $password
      */
     protected function securityCredential($plaintext)
@@ -150,10 +151,11 @@ class MpesaApiClient
     /**
      * Make API calls to Safaricom MPESA APIs.
      *
-     * @param string $url
-     * @param array $options
-     * @param string $method
+     * @param  string  $url
+     * @param  array  $options
+     * @param  string  $method
      * @return mixed
+     *
      * @throws MpesaApiRequestException
      */
     protected function call($url, $options = [], $method = 'POST')

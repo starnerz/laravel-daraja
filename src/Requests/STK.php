@@ -58,7 +58,7 @@ class STK extends MpesaApiClient
     /**
      * Set the business short code that will be used for the transaction.
      *
-     * @param string $code
+     * @param  string  $code
      */
     public function setShortCode($code)
     {
@@ -68,7 +68,7 @@ class STK extends MpesaApiClient
     /**
      * Set the pass key associated with the business short code set.
      *
-     * @param string $key
+     * @param  string  $key
      */
     public function setPassKey($key)
     {
@@ -78,7 +78,7 @@ class STK extends MpesaApiClient
     /**
      * Set the URL which will hadle the result from the MPESA API.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function setCallbackURL($url)
     {
@@ -88,9 +88,9 @@ class STK extends MpesaApiClient
     /**
      * Generate the password to be used for the transaction.
      *
-     * @param string $shortCode
-     * @param string $passKey
-     * @param string $timestamp
+     * @param  string  $shortCode
+     * @param  string  $passKey
+     * @param  string  $timestamp
      * @return string
      */
     protected function generatePassword($shortCode, $passKey, $timestamp)
@@ -101,11 +101,11 @@ class STK extends MpesaApiClient
     /**
      * Initiate an STK push to a Safaricom mobile number.
      *
-     * @param string $mobileNo
-     * @param string $amount
-     * @param string $description
-     * @param string $accountReference
-     * @param null|string $shortCode short code receiving the money
+     * @param  string  $mobileNo
+     * @param  string  $amount
+     * @param  string  $description
+     * @param  string  $accountReference
+     * @param  null|string  $shortCode  short code receiving the money
      * @return mixed
      */
     public function push($mobileNo, $amount, $description, $accountReference, $shortCode = null, $transactionType)
@@ -132,8 +132,8 @@ class STK extends MpesaApiClient
     /**
      * Check the status of a Lipa Na Mpesa Online Transaction.
      *
-     * @param string $checkoutRequestId
-     * @param null|string $shortCode
+     * @param  string  $checkoutRequestId
+     * @param  null|string  $shortCode
      * @return mixed
      */
     public function transactionStatus($checkoutRequestId, $shortCode = null)

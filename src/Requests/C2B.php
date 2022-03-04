@@ -39,10 +39,10 @@ class C2B extends MpesaApiClient
     /**
      * Register the confirmation and validation URLs to the Safaricom C2B API.
      *
-     * @param string $confirmationUrl
-     * @param string $validationUrl
-     * @param string $responseType
-     * @param null|string|int $shortCode
+     * @param  string  $confirmationUrl
+     * @param  string  $validationUrl
+     * @param  string  $responseType
+     * @param  null|string|int  $shortCode
      * @return mixed
      */
     public function registerUrls($confirmationUrl, $validationUrl, $responseType = 'Completed', $shortCode = null)
@@ -60,7 +60,7 @@ class C2B extends MpesaApiClient
     /**
      * Set the command ID to be used for the transaction.
      *
-     * @param string $commandId
+     * @param  string  $commandId
      */
     public function setCommandId($commandId)
     {
@@ -70,10 +70,10 @@ class C2B extends MpesaApiClient
     /**
      * Simulate customer payment to a pay bill number through Safaricom C2B API.
      *
-     * @param string $phoneNumber
-     * @param string $amount
-     * @param string $reference
-     * @param null|string $shortCode
+     * @param  string  $phoneNumber
+     * @param  string  $amount
+     * @param  string  $reference
+     * @param  null|string  $shortCode
      * @return mixed
      */
     public function simulatePaymentToPaybill($phoneNumber, $amount, $reference, $shortCode = null)
@@ -86,10 +86,10 @@ class C2B extends MpesaApiClient
     /**
      * Simulate customer payment to a till number through Safaricom C2B API.
      *
-     * @param string $phoneNumber
-     * @param string $amount
-     * @param string $reference
-     * @param null|string $shortCode
+     * @param  string  $phoneNumber
+     * @param  string  $amount
+     * @param  string  $reference
+     * @param  null|string  $shortCode
      * @return mixed
      */
     public function simulatePaymentToTill($phoneNumber, $amount, $reference, $shortCode = null)
@@ -105,7 +105,7 @@ class C2B extends MpesaApiClient
      * @param $phoneNumber
      * @param $amount
      * @param $reference
-     * @param null $shortCode
+     * @param  null  $shortCode
      * @return mixed
      */
     protected function simulate($phoneNumber, $amount, $reference, $shortCode = null)
