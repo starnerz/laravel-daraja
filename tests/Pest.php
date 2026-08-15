@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Support\Facades\Http;
+use Starnerz\LaravelDaraja\Tests\TestCase;
+
+uses(TestCase::class)->in(__DIR__.'/Feature', __DIR__.'/Unit');
+
+/**
+ * Fake the Daraja endpoints a test needs.
+ *
+ * Overrides are listed first because Http::fake() merges successive calls and
+ * the first matching stub wins — a later fake() cannot replace an earlier one,
+ * so every test registers its stubs exactly once through here.
+ *
+ * @param  array<string, mixed>  $overrides
+ */
+function fakeDaraja(array $overrides = []): void
+{
+    Http::fake($overrides + [
+        '*/oauth/*' => Http::response(payload('oauth-token')),
+        '*/mpesa/stkpush/*' => Http::response(payload('stk-push')),
+        '*/mpesa/stkpushquery/*' => Http::response(payload('stk-query')),
+        '*/mpesa/c2b/*/registerurl' => Http::response(payload('c2b-register')),
+        '*/mpesa/c2b/*/simulate' => Http::response(payload('acknowledgement')),
+    ]);
+}
+
+/**
+ * Load a recorded Daraja response fixture.
+ *
+ * Named payload() rather than fixture() because Pest 4 defines its own
+ * fixture() helper.
+ *
+ * @return array<string, mixed>
+ */
+function payload(string $name): array
+{
+    $path = __DIR__.'/Fixtures/'.$name.'.json';
+
+    if (! file_exists($path)) {
+        throw new InvalidArgumentException("Fixture [{$name}] does not exist at [{$path}].");
+    }
+
+    return json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+}
