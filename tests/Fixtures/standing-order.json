@@ -1,0 +1,12 @@
+{
+    "ResponseHeader": {
+        "responseRefID": "4dd9b5d9-d738-42ba-9326-2cc99e966000",
+        "responseCode": "200",
+        "responseDescription": "Request accepted for processing",
+        "ResultDesc": "The service request is processed successfully."
+    },
+    "ResponseBody": {
+        "responseDescription": "Request accepted for processing",
+        "responseCode": "200"
+    }
+}
