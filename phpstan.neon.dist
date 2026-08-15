@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - src
+    # config/laravel-daraja.php is excluded deliberately: it only returns an
+    # array, and Larastan's noEnvCallsOutsideOfConfig rule does not recognise a
+    # package's own config directory, so every env() call there is a false positive.
+    tmpDir: build/phpstan
+    checkOctaneCompatibility: true
+    checkModelProperties: true
+    treatPhpDocTypesAsCertain: false

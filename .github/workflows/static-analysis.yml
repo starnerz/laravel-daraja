@@ -1,0 +1,32 @@
+name: static analysis
+
+on:
+    push:
+        branches: [main, master, '2.x']
+    pull_request:
+        branches: [main, master, '2.x']
+
+permissions:
+    contents: read
+
+jobs:
+    phpstan:
+        runs-on: ubuntu-latest
+        name: Larastan
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+                  extensions: json, openssl, mbstring, curl
+                  coverage: none
+
+            - name: Install dependencies
+              run: composer update --prefer-dist --no-interaction --no-progress
+
+            - name: Run Larastan
+              run: vendor/bin/phpstan analyse --error-format=github --no-progress
