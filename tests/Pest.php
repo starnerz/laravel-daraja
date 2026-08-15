@@ -3,9 +3,14 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
+use Starnerz\LaravelDaraja\Tests\RoutingTestCase;
 use Starnerz\LaravelDaraja\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__.'/Feature', __DIR__.'/Unit');
+
+// Callback routes register during boot, so they need an application configured
+// before providers run — hence a separate base case and directory.
+uses(RoutingTestCase::class)->in(__DIR__.'/Routing');
 
 /**
  * Fake the Daraja endpoints a test needs.

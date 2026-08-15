@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Starnerz\LaravelDaraja;
 
+use Closure;
 use Illuminate\Contracts\Container\Container;
 use Starnerz\LaravelDaraja\Apis\AccountBalance;
 use Starnerz\LaravelDaraja\Apis\B2B;
@@ -30,7 +31,37 @@ use Starnerz\LaravelDaraja\Support\SecurityCredential;
  */
 final class Daraja
 {
+    /**
+     * Decides whether to accept a C2B payment during validation.
+     *
+     * @var (Closure(Data\Callbacks\C2BTransaction): (bool|string))|null
+     */
+    private ?Closure $c2bValidator = null;
+
     public function __construct(private readonly Container $app) {}
+
+    /**
+     * Register the callback that decides whether to accept a C2B payment.
+     *
+     * Return true to accept, false to reject with a generic error, or one of
+     * Safaricom's C2B00011–C2B00016 codes to reject with a specific reason.
+     * Safaricom expects an answer within about eight seconds, so keep the
+     * callback fast and push slow work onto a queue.
+     *
+     * @param  Closure(Data\Callbacks\C2BTransaction): (bool|string)  $callback
+     */
+    public function validateC2BUsing(Closure $callback): void
+    {
+        $this->c2bValidator = $callback;
+    }
+
+    /**
+     * @return (Closure(Data\Callbacks\C2BTransaction): (bool|string))|null
+     */
+    public function c2bValidator(): ?Closure
+    {
+        return $this->c2bValidator;
+    }
 
     /**
      * M-Pesa Express (STK Push).

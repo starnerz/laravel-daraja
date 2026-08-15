@@ -232,4 +232,27 @@ return [
         'middleware' => ['api'],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Callback Security
+    |--------------------------------------------------------------------------
+    |
+    | Safaricom callbacks carry no signature or shared secret, so the only
+    | verification available is the source address. Add Safaricom's ranges here
+    | — plain addresses or CIDR — and register the VerifySafaricomIp middleware
+    | on the callback routes. An empty list permits every request.
+    |
+    | Safaricom issues these ranges to partners directly; none are bundled with
+    | this package because they are not published. Treat callback contents as
+    | unverified input either way and confirm value with Transaction Status
+    | before releasing goods or funds.
+    |
+    */
+
+    'security' => [
+        'allowed_ips' => array_filter(
+            explode(',', (string) env('DARAJA_ALLOWED_IPS', '')),
+        ),
+    ],
+
 ];
