@@ -9,6 +9,8 @@ parameters:
     # array, and Larastan's noEnvCallsOutsideOfConfig rule does not recognise a
     # package's own config directory, so every env() call there is a false positive.
     tmpDir: build/phpstan
+    typeAliases:
+        DarajaAccountBalance: 'array{name: string, currency: string, balance: float, available: float, reserved: float, uncleared: float}'
     checkOctaneCompatibility: true
     checkModelProperties: true
     treatPhpDocTypesAsCertain: false
