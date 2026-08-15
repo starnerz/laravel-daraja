@@ -1,45 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Starnerz\LaravelDaraja\Commands;
 
 use Illuminate\Console\Command;
-use Starnerz\LaravelDaraja\Facades\MpesaApi;
+use Starnerz\LaravelDaraja\Daraja;
+use Starnerz\LaravelDaraja\Exceptions\DarajaException;
 
 class RegisterC2BUrls extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'daraja:register-urls';
+    protected $signature = 'daraja:register-urls
+                            {--confirmation= : Override the configured confirmation URL}
+                            {--validation= : Override the configured validation URL}
+                            {--short-code= : Override the configured short code}
+                            {--response-type=Completed : Completed or Cancelled}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Registers C2B URLs to the Safaricom C2B API';
+    protected $description = 'Register your C2B confirmation and validation URLs with Safaricom';
 
-    /**
-     * Create a new command instance.
-     */
-    public function __construct()
+    public function handle(Daraja $daraja): int
     {
-        parent::__construct();
-    }
+        try {
+            $result = $daraja->c2b()->registerUrls(
+                confirmationUrl: $this->option('confirmation'),
+                validationUrl: $this->option('validation'),
+                responseType: (string) $this->option('response-type'),
+                shortCode: $this->option('short-code'),
+            );
+        } catch (DarajaException $e) {
+            $this->components->error($e->getMessage());
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-        $confirmation = config('mpesaapi.c2b_url.confirmation');
-        $validation = config('mpesaapi.c2b_url.validation');
+            return self::FAILURE;
+        }
 
-        MpesaAPI::c2b()->registerUrls($confirmation, $validation);
-        $this->info('URLs registered successfully');
+        if (! $result->accepted()) {
+            $this->components->error("Safaricom rejected the registration: {$result->responseDescription}");
+
+            return self::FAILURE;
+        }
+
+        $this->components->info('C2B URLs registered successfully.');
+        $this->components->twoColumnDetail('Conversation ID', $result->originatorConversationId);
+
+        return self::SUCCESS;
     }
 }
