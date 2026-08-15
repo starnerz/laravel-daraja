@@ -26,34 +26,45 @@ final class SecurityCredential
             throw ConfigurationException::missing('initiator.credential');
         }
 
-        $certificate = file_get_contents($this->certificatePath());
+        $path = $this->certificatePath();
 
-        if ($certificate === false) {
-            throw ConfigurationException::missingCertificate($this->certificatePath());
-        }
+        // certificatePath() has already established the file is readable, so
+        // this cannot emit a warning.
+        $certificate = (string) file_get_contents($path);
 
-        if (! openssl_public_encrypt((string) $plaintext, $encrypted, $certificate, OPENSSL_PKCS1_PADDING)) {
+        // Parsing is checked separately: an unreadable key makes
+        // openssl_public_encrypt() emit a warning, which Laravel promotes to an
+        // ErrorException and which would mask the guidance below.
+        $publicKey = @openssl_pkey_get_public($certificate);
+
+        if ($publicKey === false) {
             throw new ConfigurationException(
-                'Failed to encrypt the initiator credential. The Safaricom certificate could not be parsed: '.
-                (openssl_error_string() ?: 'unknown OpenSSL error'),
+                "The Safaricom certificate at [{$path}] could not be parsed: ".
+                (openssl_error_string() ?: 'it is not a valid X.509 certificate').'.',
             );
         }
 
-        return base64_encode($encrypted);
+        if (! @openssl_public_encrypt((string) $plaintext, $encrypted, $publicKey, OPENSSL_PKCS1_PADDING)) {
+            throw new ConfigurationException(
+                'Failed to encrypt the initiator credential: '.
+                (openssl_error_string() ?: 'unknown OpenSSL error').'.',
+            );
+        }
+
+        return base64_encode((string) $encrypted);
     }
 
     public function certificatePath(): string
     {
         $configured = $this->config->get('laravel-daraja.certificate_path');
 
-        if (filled($configured)) {
-            return (string) $configured;
-        }
+        $path = filled($configured)
+            ? (string) $configured
+            : dirname(__DIR__, 2).'/certs/'.Mode::fromConfig($this->config->get('laravel-daraja.mode'))->certificate();
 
-        $mode = Mode::fromConfig($this->config->get('laravel-daraja.mode'));
-
-        $path = dirname(__DIR__, 2).'/certs/'.$mode->certificate();
-
+        // Checked for both the bundled and the configured path: a typo in
+        // certificate_path should produce guidance, not a file_get_contents
+        // warning promoted to an ErrorException.
         if (! is_readable($path)) {
             throw ConfigurationException::missingCertificate($path);
         }
