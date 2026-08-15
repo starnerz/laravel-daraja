@@ -1,60 +1,106 @@
 {
-  "name": "starnerz/laravel-daraja",
-  "description": "A laravel package for the Safaricom Daraja APIs.",
-  "license": "MIT",
-  "keywords": [
-    "laravel",
-    "daraja",
-    "mpesa",
-    "mpesa api"
-  ],
-  "type": "library",
-  "authors": [
-    {
-      "name": "Stanley Mbaabu",
-      "email": "stanleykimathi@gmail.com",
-      "role": "Web Developer"
-    }
-  ],
-  "require": {
-    "php": "^7.3",
-    "illuminate/support": "^8.0",
-    "guzzlehttp/guzzle": "^7.0",
-    "monolog/monolog": "^2.1.1"
-  },
-  "require-dev": {
-    "orchestra/testbench": "^6.0",
-    "phpunit/phpunit": "^9.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Starnerz\\LaravelDaraja\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Starnerz\\LaravelDaraja\\Tests\\": "tests"
+    "name": "starnerz/laravel-daraja",
+    "description": "A Laravel package for the Safaricom M-Pesa Daraja APIs.",
+    "license": "MIT",
+    "type": "library",
+    "homepage": "https://starnerz.github.io/daraja-docs/",
+    "keywords": [
+        "laravel",
+        "daraja",
+        "mpesa",
+        "m-pesa",
+        "safaricom",
+        "stk-push",
+        "payments",
+        "kenya"
+    ],
+    "authors": [
+        {
+            "name": "Stanley Mbaabu",
+            "email": "stanleykimathi@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/starnerz/laravel-daraja/issues",
+        "source": "https://github.com/starnerz/laravel-daraja",
+        "docs": "https://starnerz.github.io/daraja-docs/"
     },
-    "files": [
-      "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
-    ]
-  },
-  "scripts": {
-    "phpunit": "phpunit"
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Starnerz\\LaravelDaraja\\LaravelDarajaServiceProvider"
-      ],
-      "aliases": {
-        "MpesaApi": "Starnerz\\LaravelDaraja\\Facade"
-      }
-    }
-  },
-  "config": {
-    "preferred-install": "dist",
-    "sort-packages": true,
-    "optimize-autoloader": true
-  }
+    "require": {
+        "php": "^8.3",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "guzzlehttp/guzzle": "^7.8",
+        "illuminate/console": "^12.0|^13.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "rector/rector": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Starnerz\\LaravelDaraja\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Starnerz\\LaravelDaraja\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@prepare",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "test": "@php vendor/bin/pest",
+        "test:coverage": "@php vendor/bin/pest --coverage --min=90",
+        "analyse": "@php vendor/bin/phpstan analyse",
+        "format": "@php vendor/bin/pint",
+        "format:test": "@php vendor/bin/pint --test",
+        "rector": "@php vendor/bin/rector process",
+        "rector:test": "@php vendor/bin/rector process --dry-run"
+    },
+    "scripts-descriptions": {
+        "test": "Run the Pest test suite.",
+        "test:coverage": "Run the test suite and enforce the coverage threshold.",
+        "analyse": "Run static analysis with Larastan.",
+        "format": "Fix code style with Pint.",
+        "serve": "Serve the Workbench playground application."
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Starnerz\\LaravelDaraja\\LaravelDarajaServiceProvider"
+            ],
+            "aliases": {
+                "Daraja": "Starnerz\\LaravelDaraja\\Facades\\Daraja"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

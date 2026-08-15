@@ -1,0 +1,14 @@
+providers:
+    - Starnerz\LaravelDaraja\LaravelDarajaServiceProvider
+    - Workbench\App\Providers\WorkbenchServiceProvider
+
+env:
+    - DARAJA_MODE="sandbox"
+
+workbench:
+    start: '/'
+    install: true
+    discovers:
+        web: true
+        api: false
+        commands: true

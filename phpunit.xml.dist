@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="random"
+         failOnWarning="true"
+         failOnRisky="true"
+         failOnEmptyTestSuite="true"
+         beStrictAboutOutputDuringTests="true">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10="/>
+        <env name="DARAJA_MODE" value="sandbox"/>
+        <env name="DARAJA_CONSUMER_KEY" value="test-consumer-key"/>
+        <env name="DARAJA_CONSUMER_SECRET" value="test-consumer-secret"/>
+        <env name="DARAJA_INITIATOR_NAME" value="testapi"/>
+        <env name="DARAJA_INITIATOR_CREDENTIAL" value="test-credential"/>
+        <env name="DARAJA_INITIATOR_SHORTCODE" value="600000"/>
+        <env name="DARAJA_STK_SHORTCODE" value="174379"/>
+        <env name="DARAJA_STK_PASS_KEY" value="test-pass-key"/>
+    </php>
+</phpunit>
