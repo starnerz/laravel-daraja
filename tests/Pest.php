@@ -29,6 +29,16 @@ function fakeDaraja(array $overrides = []): void
         '*/mpesa/stkpushquery/*' => Http::response(payload('stk-query')),
         '*/mpesa/c2b/*/registerurl' => Http::response(payload('c2b-register')),
         '*/mpesa/c2b/*/simulate' => Http::response(payload('acknowledgement')),
+        '*/mpesa/qrcode/*' => Http::response(payload('dynamic-qr')),
+        '*/standingorder/*' => Http::response(payload('standing-order')),
+        '*/v1/ussdpush/*' => Http::response(['code' => '0', 'status' => 'USSD Initiated Successfully']),
+        '*/v1/billmanager-invoice/optin' => Http::response(payload('bill-manager-optin')),
+        '*/v1/billmanager-invoice/*' => Http::response(['Status_Message' => 'Invoice sent successfully', 'resmsg' => 'Success', 'rescode' => '200']),
+        '*/pulltransactions/v1/register' => Http::response(['ResponseRefID' => 'feb5e3f2', 'ResponseStatus' => '1000', 'ShortCode' => '600000', 'ResponseDescription' => 'Shortcode Registered Successfully']),
+        '*/pulltransactions/v1/query' => Http::response(payload('pull-transactions')),
+        '*/v1/lipa/na/bonga/*' => Http::response(payload('bonga-calculate')),
+        // Everything else on the Daraja hosts acknowledges generically.
+        '*safaricom.co.ke/*' => Http::response(payload('acknowledgement')),
     ]);
 }
 

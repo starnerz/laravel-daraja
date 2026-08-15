@@ -1,0 +1,14 @@
+{
+    "header": {
+        "requestRefId": "55b2b8bd-0be4-4430-b0dc-792efccdc690",
+        "responseCode": 200,
+        "responseMessage": "Success",
+        "customerMessage": "Request executed successfully.",
+        "timestamp": "2025-02-24T12:29:05.484864516"
+    },
+    "body": {
+        "amount": "8",
+        "points": "40",
+        "rate": "0.2"
+    }
+}
