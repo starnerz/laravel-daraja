@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Starnerz\LaravelDaraja;
 
+use Illuminate\Support\Facades\Route;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Starnerz\LaravelDaraja\Commands\RegisterC2BUrls;
@@ -40,5 +41,19 @@ class LaravelDarajaServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(Daraja::class, fn ($app): Daraja => new Daraja($app));
         $this->app->alias(Daraja::class, 'daraja');
+    }
+
+    public function packageBooted(): void
+    {
+        if (! $this->app['config']->get('laravel-daraja.routes.enabled')) {
+            return;
+        }
+
+        Route::group([
+            'prefix' => $this->app['config']->get('laravel-daraja.routes.prefix', 'daraja'),
+            'middleware' => $this->app['config']->get('laravel-daraja.routes.middleware', ['api']),
+        ], function (): void {
+            $this->loadRoutesFrom(__DIR__.'/../routes/daraja.php');
+        });
     }
 }
