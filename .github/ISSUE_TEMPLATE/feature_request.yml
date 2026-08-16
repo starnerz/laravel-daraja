@@ -1,0 +1,30 @@
+name: Feature request
+description: Support for another API, or an improvement to an existing one
+labels: [enhancement]
+body:
+    - type: textarea
+      id: problem
+      attributes:
+          label: What are you trying to do?
+          description: The use case, rather than the implementation you have in mind.
+      validations:
+          required: true
+
+    - type: input
+      id: api
+      attributes:
+          label: Which Daraja API?
+          description: If this is about an unsupported API, name it as the portal does.
+          placeholder: Tax Remittance
+
+    - type: input
+      id: docs-link
+      attributes:
+          label: Link to the portal documentation
+          placeholder: https://developer.safaricom.co.ke/dashboard/apis?api=…
+
+    - type: textarea
+      id: proposal
+      attributes:
+          label: What would the API look like?
+          render: php

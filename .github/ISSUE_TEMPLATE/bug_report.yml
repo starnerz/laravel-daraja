@@ -1,0 +1,56 @@
+name: Bug report
+description: Something behaves differently from the documentation
+labels: [bug]
+body:
+    - type: markdown
+      attributes:
+          value: |
+              **Never paste consumer secrets, initiator passwords or security
+              credentials here.** Redact them before submitting.
+
+    - type: input
+      id: package-version
+      attributes:
+          label: Package version
+          placeholder: 2.0.0
+      validations:
+          required: true
+
+    - type: input
+      id: php-laravel
+      attributes:
+          label: PHP and Laravel versions
+          placeholder: PHP 8.3.31, Laravel 13.25
+      validations:
+          required: true
+
+    - type: dropdown
+      id: mode
+      attributes:
+          label: Mode
+          options: [sandbox, live]
+      validations:
+          required: true
+
+    - type: textarea
+      id: what-happened
+      attributes:
+          label: What happened
+          description: What did you expect, and what did you get instead?
+      validations:
+          required: true
+
+    - type: textarea
+      id: code
+      attributes:
+          label: The call you made
+          render: php
+      validations:
+          required: true
+
+    - type: textarea
+      id: exception
+      attributes:
+          label: Exception or response
+          description: Include errorCode and requestId if present. Redact credentials.
+          render: text

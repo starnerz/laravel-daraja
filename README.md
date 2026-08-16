@@ -1,84 +1,123 @@
 # Laravel Daraja
 
-[![styleci](https://styleci.io/repos/126376478/shield)](https://styleci.io/repos/126376478)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/starnerz/laravel-daraja/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/starnerz/laravel-daraja/?branch=master)
-[![Packagist](https://img.shields.io/packagist/v/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
-[![Packagist](https://poser.pugx.org/starnerz/laravel-daraja/d/total.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
-[![Packagist](https://img.shields.io/packagist/l/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
+[![Tests](https://github.com/starnerz/laravel-daraja/actions/workflows/tests.yml/badge.svg)](https://github.com/starnerz/laravel-daraja/actions/workflows/tests.yml)
+[![Static analysis](https://github.com/starnerz/laravel-daraja/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/starnerz/laravel-daraja/actions/workflows/static-analysis.yml)
+[![Latest version](https://img.shields.io/packagist/v/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
+[![Downloads](https://img.shields.io/packagist/dt/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
+[![License](https://img.shields.io/packagist/l/starnerz/laravel-daraja.svg)](LICENSE)
 
-This package provides you with a simple tool to make requests to Safaricom Daraja APIs so that you can focus on the development of your awesome applications instead of all the set up involved.
+Every Safaricom M-Pesa Daraja API, as ordinary Laravel code. Typed responses,
+cached tokens, and callbacks you can actually test.
+
+📖 **[Documentation](https://starnerz.github.io/daraja-docs/)**
+
+## Requirements
+
+- PHP 8.3+
+- Laravel 12 or 13
 
 ## Installation
 
-Install via composer
 ```bash
 composer require starnerz/laravel-daraja
 ```
 
-### Register Service Provider
-
-**Note! This and next step are optional if you use laravel>=5.5 with package
-auto discovery feature.**
-
-Add service provider to `config/app.php` in `providers` section
-```php
-Starnerz\LaravelDaraja\LaravelDarajaServiceProvider::class,
+```dotenv
+DARAJA_MODE=sandbox
+DARAJA_CONSUMER_KEY=your-consumer-key
+DARAJA_CONSUMER_SECRET=your-consumer-secret
+DARAJA_STK_SHORTCODE=174379
+DARAJA_STK_PASS_KEY=your-passkey
+DARAJA_STK_CALLBACK_URL=https://your-domain/daraja/stk
 ```
 
-### Register Facade
-
-Register package facade in `config/app.php` in `aliases` section
-```php
-Starnerz\LaravelDaraja\Facades\MpesaApi::class,
-```
-
-### Publish Configuration File
+Verify the credentials:
 
 ```bash
-php artisan vendor:publish --provider="Starnerz\LaravelDaraja\LaravelDarajaServiceProvider" --tag="config"
+php artisan daraja:token
 ```
 
-Fill in all the details you will be requiring for your application. Here are the env variables for quick copy paste.
+## Prompt a customer to pay
 
-```
-DARAJA_CONSUMER_KEY=
-DARAJA_CONSUMER_SECRET=
+```php
+use Starnerz\LaravelDaraja\Facades\Daraja;
 
-DARAJA_INITIATOR_NAME=
-DARAJA_INITIATOR_CREDENTIAL=
-DARAJA_INITIATOR_SHORTCODE=
+$response = Daraja::stk()->push(
+    phone: '0712345678',       // any Kenyan format
+    amount: 1500,
+    accountReference: 'INV-001',
+);
 
-DARAJA_STK_SHORTCODE=
-DARAJA_STK_PASS_KEY=
-```
-
-## Usage
-
-If you have not created your Safaricom API application yet you can create one at [Safaricom Developer][link-safaricom-developer]
-
-Each Safaricom API except Oauth has been implemented as a class on its own which you can use in your code.
-
-
-``` php
-$STK = new STK();
-$STK->push('254727123456','10000','New Purchase','R3F3R3NC3');
+$response->accepted();          // Safaricom sent the prompt
+$response->checkoutRequestId;   // identifies this attempt
 ```
 
-If you prefer using the facade
+The payment result arrives later on your callback URL:
 
-``` php
-MpesaApi::STK()->push('254727123456','10000','New Purchase','R3F3R3NC3');
+```php
+use Starnerz\LaravelDaraja\Events\StkCallbackReceived;
+
+Event::listen(function (StkCallbackReceived $event) {
+    if ($event->callback->successful()) {
+        Order::markPaid(
+            $event->callback->checkoutRequestId,
+            $event->callback->receipt(),
+        );
+    }
+});
 ```
 
-If you will be using the C2B Api you can easily register the validation and confirmation URLs through artisan.
+## Supported APIs
 
-``` bash
-# php artisan daraja:register-urls
+| | |
+|---|---|
+| M-Pesa Express | `Daraja::stk()->push()` / `->query()` |
+| Customer to Business | `Daraja::c2b()->registerUrls()` / `->simulatePayBill()` |
+| Business to Customer | `Daraja::b2c()->business()` / `->salary()` / `->promotion()` |
+| Business to Pochi | `Daraja::b2c()->pochi()` |
+| Business to Business | `Daraja::b2b()->payBill()` / `->buyGoods()` / `->accountTopUp()` |
+| B2B Express Checkout | `Daraja::b2bExpress()->push()` |
+| Account Balance | `Daraja::balance()->query()` |
+| Transaction Status | `Daraja::transaction()->query()` |
+| Reversal | `Daraja::reversal()->reverse()` |
+| Dynamic QR | `Daraja::qr()->generate()` |
+| M-Pesa Ratiba | `Daraja::standingOrder()->create()` |
+| Bill Manager | `Daraja::billManager()->invoice()` |
+| Pull Transactions | `Daraja::pull()->query()` |
+| Lipa na Bonga | `Daraja::bonga()->redeem()` |
+
+## Testing
+
+Built on Laravel's HTTP client, so `Http::fake()` drives the whole package — no
+sandbox credentials, network or handset required.
+
+```php
+Http::fake([
+    '*/oauth/*' => Http::response(['access_token' => 'test']),
+    '*/mpesa/stkpush/*' => Http::response(['ResponseCode' => '0']),
+]);
 ```
+
+See the [testing guide](https://starnerz.github.io/daraja-docs/guides/testing/).
+
+## Upgrading from v1
+
+v2 is a rewrite: the facade is now `Daraja`, responses are typed objects, and
+several endpoints moved (C2B to v2, B2C to v3). See the
+[upgrade guide](https://starnerz.github.io/daraja-docs/upgrade/v1-to-v2/).
+
+Laravel 10 and 11 are not supported — both are past end of life and carry
+unpatched advisories. Applications on those versions should stay on `^1.0`.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
-If you discover any security related issues, please email stanleykimathi@gmail.com
-instead of using the issue tracker.
+Report vulnerabilities to stanleykimathi@gmail.com rather than the issue
+tracker. See [SECURITY.md](SECURITY.md).
 
-[link-safaricom-developer]: https://developer.safaricom.co.ke/
+## Licence
+
+MIT. See [LICENSE](LICENSE).

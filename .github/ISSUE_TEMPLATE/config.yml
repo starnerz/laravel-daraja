@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Documentation
+      url: https://starnerz.github.io/daraja-docs/
+      about: Installation, configuration, every API and the error code reference.
+    - name: Safaricom API support
+      url: mailto:apisupport@safaricom.co.ke
+      about: Short codes, go-live, operator roles and anything Safaricom-side.
+    - name: Report a security issue
+      url: https://github.com/starnerz/laravel-daraja/security/policy
+      about: Please report vulnerabilities privately, not as a public issue.
