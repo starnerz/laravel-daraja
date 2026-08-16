@@ -45,7 +45,9 @@ the callback.
 
 ## Known operational risks
 
-- The certificate bundled with 4.x and earlier expired in March 2018. 5.x ships
-  a current certificate per environment.
+- The bundled certificates show expiry dates in 2016 and 2018. These are the
+  files Safaricom distributes and they work as intended — RSA encryption uses
+  only the public key. Do not substitute a self-signed certificate to clear the
+  dates; only Safaricom holds the matching private key.
 - C2B URL registration in production is one-time. Deleting and re-registering
   requires portal access, so treat a wrong URL as an incident.

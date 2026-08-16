@@ -29,9 +29,9 @@ A full rewrite. See the
 - **C2B endpoints move to v2** and **B2C to v3**. C2B v2 masks the MSISDN where
   v1 sent a SHA-256 hash, and B2C v3 requires a unique
   `OriginatorConversationID`, which the package generates.
-- **Certificates are per environment.** The package now ships a sandbox and a
-  production certificate and picks the one matching `mode`, replacing the single
-  bundled certificate that had expired in March 2018.
+- **Certificates are per environment.** The package now ships both Safaricom
+  certificates and picks the one matching `mode`, where earlier versions bundled
+  only the production one and used it for sandbox too.
 
 ### Added
 
