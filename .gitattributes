@@ -1,5 +1,9 @@
 * text=auto
 
+# Certificates must never be line-ending normalised. These are PEM and survive
+# it, but a DER-encoded replacement would be silently corrupted.
+*.cer binary
+
 /.github export-ignore
 /tests export-ignore
 /workbench export-ignore
