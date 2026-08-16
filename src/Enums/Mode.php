@@ -24,9 +24,14 @@ enum Mode: string
 
     /**
      * The certificate shipped with the package for this environment.
+     *
+     * Filenames match the downloads on the Daraja portal so their provenance
+     * stays obvious.
      */
     public function certificate(): string
     {
-        return $this === self::Live ? 'production.cer' : 'sandbox.cer';
+        return $this === self::Live
+            ? 'ProductionCertificate.cer'
+            : 'SandboxCertificate.cer';
     }
 }

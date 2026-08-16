@@ -37,18 +37,28 @@ it('fails clearly when no credential is configured', function () {
     app(SecurityCredential::class)->generate();
 })->throws(ConfigurationException::class, 'laravel-daraja.initiator.credential');
 
-it('fails clearly when the certificate is missing', function () {
+it('picks the certificate matching the configured mode', function (string $mode, string $file) {
     config()->set('laravel-daraja.certificate_path', null);
-    config()->set('laravel-daraja.mode', 'sandbox');
+    config()->set('laravel-daraja.mode', $mode);
 
-    // sandbox.cer is deliberately not bundled; it must be downloaded from the portal.
+    expect(app(SecurityCredential::class)->certificatePath())->toEndWith($file);
+})->with([
+    ['sandbox', 'SandboxCertificate.cer'],
+    ['live', 'ProductionCertificate.cer'],
+]);
+
+it('encrypts against both bundled certificates', function (string $mode) {
+    config()->set('laravel-daraja.certificate_path', null);
+    config()->set('laravel-daraja.mode', $mode);
+
+    // The bundled certificates are long expired, which is deliberate: they are
+    // what the portal serves, and openssl_public_encrypt() uses only the public
+    // key, so validity dates never come into it.
+    expect(strlen(app(SecurityCredential::class)->generate('password')))->toBe(344);
+})->with(['sandbox', 'live']);
+
+it('fails clearly when a configured certificate is missing', function () {
+    config()->set('laravel-daraja.certificate_path', '/nonexistent/cert.cer');
+
     app(SecurityCredential::class)->certificatePath();
-})->throws(ConfigurationException::class, 'developer.safaricom.co.ke');
-
-it('picks the certificate matching the configured mode', function () {
-    config()->set('laravel-daraja.certificate_path', null);
-    config()->set('laravel-daraja.mode', 'live');
-
-    expect(app(SecurityCredential::class)->certificatePath())
-        ->toEndWith('production.cer');
-});
+})->throws(ConfigurationException::class, 'could not be read');

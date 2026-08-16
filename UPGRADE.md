@@ -79,6 +79,6 @@ C2B moved to v2 and B2C to v3.
 
 ### Certificates
 
-The package now ships a certificate per environment and selects the one matching
-`mode`, so nothing is required of you. To use your own copy instead, set
-`DARAJA_CERTIFICATE_PATH`.
+4.x bundled only the production certificate and used it for sandbox too. v5
+ships both and selects by `mode`, so nothing is required of you. To use your own
+copy instead, set `DARAJA_CERTIFICATE_PATH`.

@@ -6,28 +6,44 @@ Safaricom publishes a **different certificate per environment**.
 
 | File | Used when |
 |---|---|
-| `sandbox.cer` | `laravel-daraja.mode` is `sandbox` |
-| `production.cer` | `laravel-daraja.mode` is `live` |
+| `SandboxCertificate.cer` | `laravel-daraja.mode` is `sandbox` |
+| `ProductionCertificate.cer` | `laravel-daraja.mode` is `live` |
 
-Both ship with the package and are selected automatically. Consumers of this
-package do not need to download anything.
+Filenames match the downloads on the Daraja portal so their provenance stays
+obvious. Both ship with the package and are selected automatically; consumers do
+not need to download anything.
+
+## Why they show as expired
+
+```
+SandboxCertificate.cer      notAfter  Nov 11 07:12:45 2016 GMT
+ProductionCertificate.cer   notAfter  Mar 21 13:20:13 2018 GMT
+```
+
+This is expected, not a bug. These are the certificates Safaricom currently
+distributes — the organisation has not published newer ones. It does not matter
+in practice: `openssl_public_encrypt()` reads only the public key, and validity
+dates play no part in RSA encryption. Safaricom's own systems decrypt
+credentials produced with these.
+
+Do **not** replace them with self-signed substitutes to clear the dates. Only
+the matching private key on Safaricom's side can decrypt the credential.
 
 ## Maintainers: rotating a certificate
 
-When Safaricom issues a new certificate, download it from the
-[developer portal](https://developer.safaricom.co.ke), replace the file here,
-and note the change in `CHANGELOG.md`.
+If Safaricom ever does publish new ones, download from the
+[developer portal](https://developer.safaricom.co.ke), replace the file here
+keeping the same name, and note the change in `CHANGELOG.md`.
 
-Verify what you have before committing it:
+Check what you have before committing it:
 
 ```bash
-openssl x509 -in certs/production.cer -noout -subject -dates
+openssl x509 -in certs/ProductionCertificate.cer -noout -subject -dates
+openssl x509 -in certs/ProductionCertificate.cer -noout -modulus | md5sum
 ```
 
-> The certificate shipped with 4.x and earlier expired on 21 March 2018. RSA
-> encryption still succeeds with an expired certificate because only the public
-> key is used, which is why the problem went unnoticed — check `notAfter`
-> rather than assuming a working credential means a current certificate.
+Comparing the modulus is how you confirm a download actually differs from what
+is already committed — the subject and issuer are identical across versions.
 
 ## Using a different certificate
 
