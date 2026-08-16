@@ -5,14 +5,15 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] — unreleased
+## [5.0.0] — unreleased
 
 A full rewrite. See the
-[upgrade guide](https://starnerz.github.io/daraja-docs/upgrade/v1-to-v2/).
+[upgrade guide](https://starnerz.github.io/daraja-docs/upgrade/v4-to-v5/).
 
 ### Changed — breaking
 
-- **Requires PHP 8.3 and Laravel 12 or 13.** Laravel 10 and 11 are excluded:
+- **Requires PHP 8.3 and Laravel 12 or 13**, up from PHP 7.3 and Laravel 8.
+  Laravel 10 and 11 are excluded:
   both are past end of life and carry unpatched advisories, so Composer refuses
   to install them without disabling its security audit.
 - **The facade is now `Daraja`.** `MpesaApi` and the `Requests\*` classes are
@@ -28,9 +29,9 @@ A full rewrite. See the
 - **C2B endpoints move to v2** and **B2C to v3**. C2B v2 masks the MSISDN where
   v1 sent a SHA-256 hash, and B2C v3 requires a unique
   `OriginatorConversationID`, which the package generates.
-- **Certificates are per environment**, at `certs/sandbox.cer` and
-  `certs/production.cer`, or via `DARAJA_CERTIFICATE_PATH`. The single bundled
-  certificate in v1 expired in March 2018.
+- **Certificates are per environment.** The package now ships a sandbox and a
+  production certificate and picks the one matching `mode`, replacing the single
+  bundled certificate that had expired in March 2018.
 
 ### Added
 
@@ -61,10 +62,16 @@ A full rewrite. See the
 - Configuration problems raise a `ConfigurationException` naming the key or path
   instead of surfacing as a PHP warning promoted to `ErrorException`.
 
-## [1.0.0]
+## [4.0.0] — 2020-09-10
+
+Laravel 8 support. Together with 3.0.0 and 2.0.0, released the same day, this
+tracked successive Laravel majors over the 1.x codebase.
+
+## [1.0.0] — 2018-03-23
 
 Initial releases supporting M-Pesa Express, C2B, B2C, B2B, Account Balance,
 Transaction Status and Reversal on Laravel 5.5+.
 
-[2.0.0]: https://github.com/starnerz/laravel-daraja/compare/v1.0.0...v2.0.0
+[5.0.0]: https://github.com/starnerz/laravel-daraja/compare/v4.0.0...v5.0.0
+[4.0.0]: https://github.com/starnerz/laravel-daraja/compare/v1.0.4...v4.0.0
 [1.0.0]: https://github.com/starnerz/laravel-daraja/releases/tag/v1.0.0

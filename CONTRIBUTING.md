@@ -69,6 +69,13 @@ fix: send Occasion with one s on transaction status
 refactor!: rename the MpesaApi facade to Daraja
 ```
 
+## Certificates
+
+`certs/sandbox.cer` and `certs/production.cer` are shipped with the package and
+selected automatically from `mode`. When Safaricom rotates one, replace the file
+here and note it in the changelog — consumers should never have to fetch a
+certificate themselves.
+
 ## Documentation
 
 User-facing changes need a matching pull request against

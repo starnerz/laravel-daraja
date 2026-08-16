@@ -1,14 +1,18 @@
 # Upgrading
 
-## 1.x to 2.0
+## 4.x to 5.0
 
 Full guide with examples:
-**https://starnerz.github.io/daraja-docs/upgrade/v1-to-v2/**
+**https://starnerz.github.io/daraja-docs/upgrade/v4-to-v5/**
+
+Versions 2.0.0, 3.0.0 and 4.0.0 were released on the same day in 2020 and share
+the 1.x codebase, tracking successive Laravel majors. Whichever of those you are
+on, this guide applies.
 
 ### Requirements
 
-PHP 8.3+ and Laravel 12 or 13. Laravel 10 and 11 are not supported — stay on
-`^1.0` if you cannot upgrade.
+PHP 8.3+ and Laravel 12 or 13, up from PHP 7.3 and Laravel 8. Laravel 10 and 11
+are not supported — stay on `^4.0` if you cannot upgrade.
 
 ### Facade and classes
 
@@ -17,7 +21,7 @@ PHP 8.3+ and Laravel 12 or 13. Laravel 10 and 11 are not supported — stay on
 + use Starnerz\LaravelDaraja\Facades\Daraja;
 ```
 
-| 1.x | 2.0 |
+| 4.x | 5.0 |
 |---|---|
 | `MpesaApi::STK()->push($phone, $amount, $desc, $ref)` | `Daraja::stk()->push($phone, $amount, $ref, $desc)` |
 | `MpesaApi::STK()->transactionStatus($id)` | `Daraja::stk()->query($id)` |
@@ -36,7 +40,7 @@ PHP 8.3+ and Laravel 12 or 13. Laravel 10 and 11 are not supported — stay on
 php artisan vendor:publish --tag=laravel-daraja-config --force
 ```
 
-| 1.x | 2.0 |
+| 4.x | 5.0 |
 |---|---|
 | `stk_push.*` | `stk.*` |
 | `c2b_url.*` | `urls.c2b.*` |
@@ -68,13 +72,13 @@ The decoded array is still on `$response->raw`.
 
 C2B moved to v2 and B2C to v3.
 
-- **C2B v2 masks the MSISDN** (`2547 ***** 126`); v1 sent a SHA-256 hash. Code
-  matching customers on that value needs revisiting.
+- **C2B v2 masks the MSISDN** (`2547 ***** 126`); the older endpoint sent a
+  SHA-256 hash. Code matching customers on that value needs revisiting.
 - **B2C v3 requires `OriginatorConversationID`.** One is generated per request;
   pass your own to make retries idempotent.
 
 ### Certificates
 
-Download current sandbox and production certificates from the developer portal
-to `certs/sandbox.cer` and `certs/production.cer`, or set
-`DARAJA_CERTIFICATE_PATH`. The certificate bundled with 1.x expired in 2018.
+The package now ships a certificate per environment and selects the one matching
+`mode`, so nothing is required of you. To use your own copy instead, set
+`DARAJA_CERTIFICATE_PATH`.

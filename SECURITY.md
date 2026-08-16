@@ -4,10 +4,11 @@
 
 | Version | Supported |
 |---|---|
-| 2.x | ✅ |
-| 1.x | ❌ |
+| 5.x | ✅ |
+| 4.x and earlier | ❌ |
 
-1.x targets Laravel 8 and is no longer maintained.
+4.x and the 2.x/3.x releases alongside it target Laravel 8 and are no longer
+maintained.
 
 ## Reporting a vulnerability
 
@@ -44,7 +45,7 @@ the callback.
 
 ## Known operational risks
 
-- The `production.cer` bundled with 1.x expired in March 2018. Download current
-  certificates from the developer portal.
+- The certificate bundled with 4.x and earlier expired in March 2018. 5.x ships
+  a current certificate per environment.
 - C2B URL registration in production is one-time. Deleting and re-registering
   requires portal access, so treat a wrong URL as an incident.

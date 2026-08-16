@@ -1,33 +1,42 @@
 # Safaricom public certificates
 
 These certificates encrypt the initiator password into the `SecurityCredential`
-that the B2C, B2B, Reversal, Account Balance and Transaction Status APIs require.
+required by B2C, B2B, Reversal, Account Balance and Transaction Status.
 Safaricom publishes a **different certificate per environment**.
 
-| File | Environment | Config value |
-|---|---|---|
-| `sandbox.cer` | `mode = sandbox` | — |
-| `production.cer` | `mode = live` | — |
+| File | Used when |
+|---|---|
+| `sandbox.cer` | `laravel-daraja.mode` is `sandbox` |
+| `production.cer` | `laravel-daraja.mode` is `live` |
 
-## Keeping them current
+Both ship with the package and are selected automatically. Consumers of this
+package do not need to download anything.
 
-Download the current certificates from the Daraja portal
-(<https://developer.safaricom.co.ke>) and replace the files here.
+## Maintainers: rotating a certificate
 
-> **`production.cer` in this repository expired on 21 March 2018.**
-> It is the certificate that shipped with v1 of this package. RSA encryption
-> still succeeds with an expired certificate because only the public key is
-> used, but it should be replaced with the current one before going live.
+When Safaricom issues a new certificate, download it from the
+[developer portal](https://developer.safaricom.co.ke), replace the file here,
+and note the change in `CHANGELOG.md`.
 
-`sandbox.cer` is not bundled — download it from the portal. Until it exists,
-`SecurityCredential` throws a `ConfigurationException` naming the missing path
-rather than failing silently.
+Verify what you have before committing it:
 
-## Using your own path
+```bash
+openssl x509 -in certs/production.cer -noout -subject -dates
+```
 
-To point at a certificate stored outside the package, set:
+> The certificate shipped with 4.x and earlier expired on 21 March 2018. RSA
+> encryption still succeeds with an expired certificate because only the public
+> key is used, which is why the problem went unnoticed — check `notAfter`
+> rather than assuming a working credential means a current certificate.
+
+## Using a different certificate
+
+An application can override the bundled files:
 
 ```php
 // config/laravel-daraja.php
 'certificate_path' => storage_path('daraja/production.cer'),
 ```
+
+The path is checked for readability before use, so a typo raises a
+`ConfigurationException` naming the path rather than a PHP warning.
