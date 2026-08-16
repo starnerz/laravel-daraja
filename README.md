@@ -100,14 +100,14 @@ Http::fake([
 
 See the [testing guide](https://starnerz.github.io/daraja-docs/guides/testing/).
 
-## Upgrading from v1
+## Upgrading from 4.x
 
-v2 is a rewrite: the facade is now `Daraja`, responses are typed objects, and
+v5 is a rewrite: the facade is now `Daraja`, responses are typed objects, and
 several endpoints moved (C2B to v2, B2C to v3). See the
-[upgrade guide](https://starnerz.github.io/daraja-docs/upgrade/v1-to-v2/).
+[upgrade guide](https://starnerz.github.io/daraja-docs/upgrade/v4-to-v5/).
 
 Laravel 10 and 11 are not supported — both are past end of life and carry
-unpatched advisories. Applications on those versions should stay on `^1.0`.
+unpatched advisories. Applications on those versions should stay on `^4.0`.
 
 ## Contributing
 
