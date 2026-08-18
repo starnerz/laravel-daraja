@@ -7,8 +7,9 @@
             "ResultDesc": "The service request is processed successfully.",
             "CallbackMetadata": {
                 "Item": [
-                    { "Name": "Amount", "Value": 1.0 },
+                    { "Name": "Amount", "Value": 1 },
                     { "Name": "MpesaReceiptNumber", "Value": "NLJ7RT61SV" },
+                    { "Name": "Balance" },
                     { "Name": "TransactionDate", "Value": 20191219102115 },
                     { "Name": "PhoneNumber", "Value": 254708374149 }
                 ]

@@ -17,6 +17,17 @@ it('parses a successful STK callback', function () {
         ->and($callback->transactionDate())->toBe('20191219102115');
 });
 
+it('tolerates a metadata item that carries no Value', function () {
+    // Safaricom sends {"Name": "Balance"} with the key omitted entirely on a
+    // successful push. Observed in sandbox, not documented.
+    $callback = StkCallback::fromArray(payload('stk-callback-success'));
+
+    expect($callback->metadata->get('Balance'))->toBeNull()
+        ->and($callback->metadata->string('Balance'))->toBe('')
+        // The items after it must still parse.
+        ->and($callback->receipt())->toBe('NLJ7RT61SV');
+});
+
 it('parses a cancelled STK callback that carries no metadata', function () {
     $callback = StkCallback::fromArray(payload('stk-callback-cancelled'));
 
