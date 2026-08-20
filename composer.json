@@ -12,7 +12,15 @@
         "safaricom",
         "stk-push",
         "payments",
-        "kenya"
+        "kenya",
+        "mpesa-api",
+        "daraja-api",
+        "lipa-na-mpesa",
+        "c2b",
+        "b2c",
+        "payment-gateway",
+        "laravel-package",
+        "fintech"
     ],
     "authors": [
         {

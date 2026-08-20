@@ -1,15 +1,23 @@
 # Laravel Daraja
 
+Every Safaricom M-Pesa Daraja API, as ordinary Laravel code. Seventeen APIs —
+STK Push, C2B, B2C, B2B, Dynamic QR, M-Pesa Ratiba, Bill Manager and the rest —
+with typed responses, cached tokens, and callbacks you can actually test.
+
+📖 **[Documentation](https://starnerz.github.io/daraja-docs/)** ·
+[Install](https://starnerz.github.io/daraja-docs/getting-started/installation/) ·
+[STK Push](https://starnerz.github.io/daraja-docs/apis/mpesa-express/) ·
+[Going live](https://starnerz.github.io/daraja-docs/guides/going-live/)
+
+```php
+Daraja::stk()->push(phone: '0712345678', amount: 1500, accountReference: 'INV-001');
+```
+
 [![Tests](https://github.com/starnerz/laravel-daraja/actions/workflows/tests.yml/badge.svg)](https://github.com/starnerz/laravel-daraja/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/starnerz/laravel-daraja/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/starnerz/laravel-daraja/actions/workflows/static-analysis.yml)
 [![Latest version](https://img.shields.io/packagist/v/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
 [![Downloads](https://img.shields.io/packagist/dt/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
 [![License](https://img.shields.io/packagist/l/starnerz/laravel-daraja.svg)](LICENSE)
-
-Every Safaricom M-Pesa Daraja API, as ordinary Laravel code. Typed responses,
-cached tokens, and callbacks you can actually test.
-
-📖 **[Documentation](https://starnerz.github.io/daraja-docs/)**
 
 ## Requirements
 
