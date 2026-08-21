@@ -5,6 +5,19 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`DarajaRequestSending` and `DarajaResponseReceived` events**, dispatched
+  around every outbound call made through `DarajaClient`. Between these and the
+  five callback events, both directions of a Daraja integration are now
+  observable without decorating anything.
+  The request payload and the response body carry the same redaction the
+  logger applies, so a listener may persist them safely. A call that never
+  received a response dispatches only the first event, which is how a listener
+  tells an unanswered request from a rejected one.
+
 ## [5.0.0] — 2026-08-18
 
 A full rewrite. See the

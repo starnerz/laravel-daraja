@@ -11,6 +11,8 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Log\LogManager;
 use Starnerz\LaravelDaraja\Enums\Mode;
+use Starnerz\LaravelDaraja\Events\DarajaRequestSending;
+use Starnerz\LaravelDaraja\Events\DarajaResponseReceived;
 use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
 use Throwable;
 
@@ -92,7 +94,14 @@ final class DarajaClient
      */
     private function send(string $method, string $endpoint, array $data): array
     {
-        $this->logRequest($method, $endpoint, $data);
+        // Redacted once and shared: the log and the event must never disagree
+        // about what is safe to keep.
+        $redacted = $this->redact($data);
+
+        $this->logRequest($method, $endpoint, $redacted);
+        DarajaRequestSending::dispatch($method, $endpoint, $redacted);
+
+        $startedAt = microtime(true);
 
         try {
             $response = $this->pendingRequest()->send($method, $endpoint, [
@@ -105,7 +114,17 @@ final class DarajaClient
             );
         }
 
+        $elapsed = round((microtime(true) - $startedAt) * 1000, 2);
+        $body = $response->json();
+
         $this->logResponse($endpoint, $response);
+        DarajaResponseReceived::dispatch(
+            $method,
+            $endpoint,
+            $response->status(),
+            is_array($body) ? $this->redact($body) : $response->body(),
+            $elapsed,
+        );
 
         if ($response->failed()) {
             throw ApiRequestException::fromResponse($response);
@@ -122,15 +141,15 @@ final class DarajaClient
     }
 
     /**
-     * @param  array<array-key, mixed>  $data
+     * @param  array<array-key, mixed>  $redacted  Already passed through redact()
      */
-    private function logRequest(string $method, string $endpoint, array $data): void
+    private function logRequest(string $method, string $endpoint, array $redacted): void
     {
         if (! $this->config->get('laravel-daraja.logging.enabled')) {
             return;
         }
 
-        $this->channel()->debug("Daraja request {$method} {$endpoint}", $this->redact($data));
+        $this->channel()->debug("Daraja request {$method} {$endpoint}", $redacted);
     }
 
     private function logResponse(string $endpoint, Response $response): void
