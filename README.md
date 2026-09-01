@@ -4,10 +4,10 @@ Every Safaricom M-Pesa Daraja API, as ordinary Laravel code. Seventeen APIs —
 STK Push, C2B, B2C, B2B, Dynamic QR, M-Pesa Ratiba, Bill Manager and the rest —
 with typed responses, cached tokens, and callbacks you can actually test.
 
-📖 **[Documentation](https://starnerz.github.io/daraja-docs/)** ·
-[Install](https://starnerz.github.io/daraja-docs/getting-started/installation/) ·
-[STK Push](https://starnerz.github.io/daraja-docs/apis/mpesa-express/) ·
-[Going live](https://starnerz.github.io/daraja-docs/guides/going-live/)
+📖 **[Documentation](https://laraveldaraja.com/)** ·
+[Install](https://laraveldaraja.com/getting-started/installation/) ·
+[STK Push](https://laraveldaraja.com/apis/mpesa-express/) ·
+[Going live](https://laraveldaraja.com/guides/going-live/)
 
 ```php
 Daraja::stk()->push(phone: '0712345678', amount: 1500, accountReference: 'INV-001');
@@ -106,13 +106,13 @@ Http::fake([
 ]);
 ```
 
-See the [testing guide](https://starnerz.github.io/daraja-docs/guides/testing/).
+See the [testing guide](https://laraveldaraja.com/guides/testing/).
 
 ## Upgrading from 4.x
 
 v5 is a rewrite: the facade is now `Daraja`, responses are typed objects, and
 several endpoints moved (C2B to v2, B2C to v3). See the
-[upgrade guide](https://starnerz.github.io/daraja-docs/upgrade/v4-to-v5/).
+[upgrade guide](https://laraveldaraja.com/upgrade/v4-to-v5/).
 
 Laravel 10 and 11 are not supported — both are past end of life and carry
 unpatched advisories. Applications on those versions should stay on `^4.0`.

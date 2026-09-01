@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
     - name: Documentation
-      url: https://starnerz.github.io/daraja-docs/
+      url: https://laraveldaraja.com/
       about: Installation, configuration, every API and the error code reference.
     - name: Safaricom API support
       url: mailto:apisupport@safaricom.co.ke

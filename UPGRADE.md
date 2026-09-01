@@ -3,7 +3,7 @@
 ## 4.x to 5.0
 
 Full guide with examples:
-**https://starnerz.github.io/daraja-docs/upgrade/v4-to-v5/**
+**https://laraveldaraja.com/upgrade/v4-to-v5/**
 
 Versions 2.0.0, 3.0.0 and 4.0.0 were released on the same day in 2020 and share
 the 1.x codebase, tracking successive Laravel majors. Whichever of those you are

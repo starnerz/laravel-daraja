@@ -3,7 +3,7 @@
     "description": "A Laravel package for the Safaricom M-Pesa Daraja APIs.",
     "license": "MIT",
     "type": "library",
-    "homepage": "https://starnerz.github.io/daraja-docs/",
+    "homepage": "https://laraveldaraja.com/",
     "keywords": [
         "laravel",
         "daraja",
@@ -32,7 +32,7 @@
     "support": {
         "issues": "https://github.com/starnerz/laravel-daraja/issues",
         "source": "https://github.com/starnerz/laravel-daraja",
-        "docs": "https://starnerz.github.io/daraja-docs/"
+        "docs": "https://laraveldaraja.com/"
     },
     "require": {
         "php": "^8.3",
