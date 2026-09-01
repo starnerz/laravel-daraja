@@ -123,7 +123,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
-Report vulnerabilities to stanleykimathi@gmail.com rather than the issue
+Report vulnerabilities to security@eazysoft.africa rather than the issue
 tracker. See [SECURITY.md](SECURITY.md).
 
 ## Licence

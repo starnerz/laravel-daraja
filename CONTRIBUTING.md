@@ -92,5 +92,5 @@ an issue.**
 
 ## Security
 
-Report vulnerabilities privately to stanleykimathi@gmail.com. See
+Report vulnerabilities privately to security@eazysoft.africa. See
 [SECURITY.md](SECURITY.md).

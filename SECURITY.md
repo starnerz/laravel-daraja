@@ -12,7 +12,7 @@ maintained.
 
 ## Reporting a vulnerability
 
-Email **stanleykimathi@gmail.com** rather than opening a public issue. Please
+Email **security@eazysoft.africa** rather than opening a public issue. Please
 include the affected version, a description, and steps to reproduce.
 
 You can expect an acknowledgement within a few days.
