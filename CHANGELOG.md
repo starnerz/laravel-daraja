@@ -5,6 +5,26 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.2.0] — 2026-09-01
+
+### Added
+
+- **Guzzle 8 support.** The requirement is now `^7.8 || ^8.0`. Nothing in the
+  package changes: this widens what it permits, so an application that has
+  already moved to Guzzle 8 can install it at all. Applications on Guzzle 7 are
+  unaffected and need do nothing.
+  Both are covered by CI rather than assumed — Laravel 12 resolves Guzzle 7 and
+  Laravel 13 resolves Guzzle 8, on PHP 8.3 and 8.4 alike.
+
+### Changed
+
+- **Vulnerability reports now go to `security@eazysoft.africa`** rather than a
+  personal address. `SECURITY.md` is the authority; the README and
+  `CONTRIBUTING.md` agree with it.
+- Documentation moved to **https://laraveldaraja.com/**. The old
+  `starnerz.github.io/daraja-docs/` URLs redirect, so existing links keep
+  working.
+
 ## [5.1.0] — 2026-09-01
 
 ### Added
@@ -85,6 +105,7 @@ tracked successive Laravel majors over the 1.x codebase.
 Initial releases supporting M-Pesa Express, C2B, B2C, B2B, Account Balance,
 Transaction Status and Reversal on Laravel 5.5+.
 
+[5.2.0]: https://github.com/starnerz/laravel-daraja/compare/v5.1.0...v5.2.0
 [5.1.0]: https://github.com/starnerz/laravel-daraja/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/starnerz/laravel-daraja/compare/v4.0.0...v5.0.0
 [4.0.0]: https://github.com/starnerz/laravel-daraja/compare/v1.0.4...v4.0.0
