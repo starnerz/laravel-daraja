@@ -19,10 +19,13 @@ class DarajaRequestSending
 
     /**
      * @param  array<array-key, mixed>  $payload  Redacted
+     * @param  string|null  $connection  Whose credentials the call is made
+     *                                   with, when Daraja::using() named them
      */
     public function __construct(
         public readonly string $method,
         public readonly string $endpoint,
         public readonly array $payload,
+        public readonly ?string $connection = null,
     ) {}
 }

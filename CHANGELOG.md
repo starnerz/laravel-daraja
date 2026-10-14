@@ -5,6 +5,26 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`Daraja::using($settings, connection: …)`** returns a Daraja that makes
+  every call with the given settings in place of the configured ones. Keys are
+  those of `config/laravel-daraja.php`, nested or in dot notation; anything not
+  given falls back to configuration.
+  It replaces setting configuration around a call and restoring it in a
+  `finally` block. Nothing is set globally, so there is nothing to restore, and
+  a queued job or a long-lived worker can never inherit another merchant's
+  credentials. Access tokens stay per merchant, as before, because the cache
+  key already fingerprints the consumer key.
+  APIs on a scoped instance are built directly rather than resolved from the
+  container, so a binding that decorates an API does not apply to them.
+- **`connection` on `DarajaRequestSending` and `DarajaResponseReceived`**: the
+  name passed to `using()`, or null. It lets a listener tell which merchant a
+  call was made for when the payload does not say. Added as a trailing optional
+  constructor argument, so code constructing these events itself is unaffected.
+
 ## [5.2.0] — 2026-09-01
 
 ### Added

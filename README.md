@@ -75,6 +75,24 @@ Event::listen(function (StkCallbackReceived $event) {
 });
 ```
 
+## Several merchants in one application
+
+Give a call its own credentials without touching configuration:
+
+```php
+Daraja::using([
+    'consumer_key' => $merchant->consumer_key,
+    'consumer_secret' => $merchant->consumer_secret,
+    'stk.short_code' => $merchant->short_code,
+    'stk.pass_key' => $merchant->pass_key,
+], connection: $merchant->slug)->stk()->push(...);
+```
+
+Anything not given falls back to configuration. Nothing is set globally, so a
+queued job or long-lived worker can never inherit another merchant's
+credentials. The `connection` name is carried on `DarajaRequestSending` and
+`DarajaResponseReceived`.
+
 ## Supported APIs
 
 | | |

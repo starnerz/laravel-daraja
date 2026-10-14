@@ -22,6 +22,8 @@ class DarajaResponseReceived
      * @param  array<array-key, mixed>|string  $body  Redacted where the response
      *                                                decoded to an array, raw
      *                                                otherwise.
+     * @param  string|null  $connection  Whose credentials the call was made
+     *                                   with, when Daraja::using() named them
      */
     public function __construct(
         public readonly string $method,
@@ -29,6 +31,7 @@ class DarajaResponseReceived
         public readonly int $status,
         public readonly array|string $body,
         public readonly float $durationMs,
+        public readonly ?string $connection = null,
     ) {}
 
     public function successful(): bool

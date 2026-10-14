@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Starnerz\LaravelDaraja;
 
 use Closure;
+use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Arr;
 use Starnerz\LaravelDaraja\Apis\AccountBalance;
 use Starnerz\LaravelDaraja\Apis\B2B;
 use Starnerz\LaravelDaraja\Apis\B2BExpressCheckout;
@@ -21,6 +24,7 @@ use Starnerz\LaravelDaraja\Apis\StandingOrder;
 use Starnerz\LaravelDaraja\Apis\TransactionStatus;
 use Starnerz\LaravelDaraja\Http\DarajaClient;
 use Starnerz\LaravelDaraja\Http\TokenRepository;
+use Starnerz\LaravelDaraja\Support\CallbackUrl;
 use Starnerz\LaravelDaraja\Support\SecurityCredential;
 
 /**
@@ -38,7 +42,14 @@ final class Daraja
      */
     private ?Closure $c2bValidator = null;
 
-    public function __construct(private readonly Container $app) {}
+    /**
+     * @param  Repository|null  $config  Settings of this instance's own, from
+     *                                   using(); null for the application's.
+     */
+    public function __construct(
+        private readonly Container $app,
+        private readonly ?Repository $config = null,
+    ) {}
 
     /**
      * Register the callback that decides whether to accept a C2B payment.
@@ -68,7 +79,7 @@ final class Daraja
      */
     public function stk(): MpesaExpress
     {
-        return $this->app->make(MpesaExpress::class);
+        return $this->make(MpesaExpress::class);
     }
 
     /**
@@ -76,7 +87,7 @@ final class Daraja
      */
     public function c2b(): C2B
     {
-        return $this->app->make(C2B::class);
+        return $this->make(C2B::class);
     }
 
     /**
@@ -84,7 +95,7 @@ final class Daraja
      */
     public function b2c(): B2C
     {
-        return $this->app->make(B2C::class);
+        return $this->make(B2C::class);
     }
 
     /**
@@ -92,7 +103,7 @@ final class Daraja
      */
     public function b2b(): B2B
     {
-        return $this->app->make(B2B::class);
+        return $this->make(B2B::class);
     }
 
     /**
@@ -100,7 +111,7 @@ final class Daraja
      */
     public function balance(): AccountBalance
     {
-        return $this->app->make(AccountBalance::class);
+        return $this->make(AccountBalance::class);
     }
 
     /**
@@ -108,7 +119,7 @@ final class Daraja
      */
     public function transaction(): TransactionStatus
     {
-        return $this->app->make(TransactionStatus::class);
+        return $this->make(TransactionStatus::class);
     }
 
     /**
@@ -116,7 +127,7 @@ final class Daraja
      */
     public function reversal(): Reversal
     {
-        return $this->app->make(Reversal::class);
+        return $this->make(Reversal::class);
     }
 
     /**
@@ -124,7 +135,7 @@ final class Daraja
      */
     public function b2bExpress(): B2BExpressCheckout
     {
-        return $this->app->make(B2BExpressCheckout::class);
+        return $this->make(B2BExpressCheckout::class);
     }
 
     /**
@@ -132,7 +143,7 @@ final class Daraja
      */
     public function qr(): DynamicQr
     {
-        return $this->app->make(DynamicQr::class);
+        return $this->make(DynamicQr::class);
     }
 
     /**
@@ -140,7 +151,7 @@ final class Daraja
      */
     public function standingOrder(): StandingOrder
     {
-        return $this->app->make(StandingOrder::class);
+        return $this->make(StandingOrder::class);
     }
 
     /**
@@ -148,7 +159,7 @@ final class Daraja
      */
     public function billManager(): BillManager
     {
-        return $this->app->make(BillManager::class);
+        return $this->make(BillManager::class);
     }
 
     /**
@@ -156,7 +167,7 @@ final class Daraja
      */
     public function pull(): PullTransactions
     {
-        return $this->app->make(PullTransactions::class);
+        return $this->make(PullTransactions::class);
     }
 
     /**
@@ -164,7 +175,7 @@ final class Daraja
      */
     public function bonga(): LipaNaBonga
     {
-        return $this->app->make(LipaNaBonga::class);
+        return $this->make(LipaNaBonga::class);
     }
 
     /**
@@ -172,7 +183,7 @@ final class Daraja
      */
     public function client(): DarajaClient
     {
-        return $this->app->make(DarajaClient::class);
+        return $this->make(DarajaClient::class);
     }
 
     /**
@@ -180,7 +191,7 @@ final class Daraja
      */
     public function accessToken(): string
     {
-        return $this->app->make(TokenRepository::class)->token();
+        return $this->make(TokenRepository::class)->token();
     }
 
     /**
@@ -188,7 +199,7 @@ final class Daraja
      */
     public function forgetAccessToken(): void
     {
-        $this->app->make(TokenRepository::class)->forget();
+        $this->make(TokenRepository::class)->forget();
     }
 
     /**
@@ -196,6 +207,87 @@ final class Daraja
      */
     public function securityCredential(?string $plaintext = null): string
     {
-        return $this->app->make(SecurityCredential::class)->generate($plaintext);
+        return $this->make(SecurityCredential::class)->generate($plaintext);
+    }
+
+    /**
+     * A Daraja that makes every call with these settings in place of the
+     * configured ones, leaving the application's configuration untouched.
+     *
+     * Keys are those of config/laravel-daraja.php, nested or in dot notation:
+     * `consumer_key`, `mode`, `stk.pass_key`, `initiator.credential` and so on.
+     * Anything not given falls back to configuration as it stands now.
+     *
+     * This is how one application calls Daraja for several merchants. Nothing
+     * is set globally, so there is nothing to restore, and a queued job or a
+     * long-lived worker can never inherit another merchant's credentials.
+     *
+     * `$connection` names whose credentials these are. It is carried on
+     * DarajaRequestSending and DarajaResponseReceived, so a listener can tell
+     * which merchant a call was made for; the payload alone does not always say.
+     *
+     * Every API on the returned instance is built directly rather than resolved
+     * from the container, so a binding that decorates an API does not apply to
+     * it. A decorator that read configuration globally would otherwise send one
+     * merchant's call with another's credentials.
+     *
+     * @param  array<string, mixed>  $settings
+     */
+    public function using(array $settings, ?string $connection = null): self
+    {
+        $current = $this->config?->get('laravel-daraja')
+            ?? $this->app->make('config')->get('laravel-daraja', []);
+
+        $merged = array_replace_recursive((array) $current, Arr::undot($settings));
+
+        if ($connection !== null) {
+            $merged['connection'] = $connection;
+        }
+
+        return new self($this->app, new ConfigRepository(['laravel-daraja' => $merged]));
+    }
+
+    /**
+     * The connection this instance makes its calls for, if it was named.
+     */
+    public function connection(): ?string
+    {
+        $connection = $this->config?->get('laravel-daraja.connection');
+
+        return is_string($connection) ? $connection : null;
+    }
+
+    /**
+     * Resolve one of the package's services, against this instance's settings
+     * when it has its own.
+     *
+     * @template T of object
+     *
+     * @param  class-string<T>  $class
+     * @return T
+     */
+    private function make(string $class): object
+    {
+        if ($this->config === null) {
+            return $this->app->make($class);
+        }
+
+        $config = $this->config;
+
+        // The package's own services are bound by class alone, so passing
+        // parameters builds a fresh, unshared instance around these settings.
+        $tokens = $this->app->make(TokenRepository::class, ['config' => $config]);
+        $client = $this->app->make(DarajaClient::class, ['config' => $config, 'tokens' => $tokens]);
+        $credential = $this->app->make(SecurityCredential::class, ['config' => $config]);
+
+        $built = match ($class) {
+            TokenRepository::class => $tokens,
+            DarajaClient::class => $client,
+            SecurityCredential::class => $credential,
+            default => new $class($client, $config, $this->app->make(CallbackUrl::class), $credential),
+        };
+
+        /** @var T $built */
+        return $built;
     }
 }

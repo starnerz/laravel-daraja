@@ -99,7 +99,7 @@ final class DarajaClient
         $redacted = $this->redact($data);
 
         $this->logRequest($method, $endpoint, $redacted);
-        DarajaRequestSending::dispatch($method, $endpoint, $redacted);
+        DarajaRequestSending::dispatch($method, $endpoint, $redacted, $this->connection());
 
         $startedAt = microtime(true);
 
@@ -124,6 +124,7 @@ final class DarajaClient
             $response->status(),
             is_array($body) ? $this->redact($body) : $response->body(),
             $elapsed,
+            $this->connection(),
         );
 
         if ($response->failed()) {
@@ -131,6 +132,16 @@ final class DarajaClient
         }
 
         return (array) $response->json();
+    }
+
+    /**
+     * The connection named by Daraja::using(), if this client was built by it.
+     */
+    private function connection(): ?string
+    {
+        $connection = $this->config->get('laravel-daraja.connection');
+
+        return is_string($connection) ? $connection : null;
     }
 
     private function host(): string

@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static string accessToken()
  * @method static void forgetAccessToken()
  * @method static string securityCredential(?string $plaintext = null)
+ * @method static \Starnerz\LaravelDaraja\Daraja using(array<string, mixed> $settings, ?string $connection = null)
+ * @method static string|null connection()
  *
  * @see \Starnerz\LaravelDaraja\Daraja
  */
