@@ -39,7 +39,10 @@ class LaravelDarajaServiceProvider extends PackageServiceProvider
         $this->app->singleton(TokenRepository::class);
         $this->app->singleton(DarajaClient::class);
 
-        $this->app->singleton(Daraja::class, fn ($app): Daraja => new Daraja($app));
+        // Scoped rather than a singleton: Daraja reads configuration through the
+        // container at call time, and under Octane a singleton would keep the
+        // container from boot instead of the request's.
+        $this->app->scoped(Daraja::class, fn ($app): Daraja => new Daraja($app));
         $this->app->alias(Daraja::class, 'daraja');
     }
 
