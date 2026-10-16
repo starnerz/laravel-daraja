@@ -5,6 +5,22 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.0] — 2026-10-16
+
+### Added
+
+- **Exceptions link to the page that explains them.** Every package exception
+  has `docsUrl()` and a `context()` that Laravel adds to the log entry when it
+  reports the exception. An `ApiRequestException` also logs Safaricom's
+  `error_code`, `request_id` and the HTTP status, and links to the error-codes
+  reference. Its message is unchanged, since applications store and show it.
+- **Setup errors name the page to read.** A missing configuration value and a
+  failed access-token request now end with a link to the configuration docs.
+- **`daraja:token` says what to do next** once the credentials work: the STK
+  Push tutorial.
+- **The published config file links to the docs** for each section that has a
+  guide.
+
 ## [5.3.1] — 2026-10-15
 
 ### Fixed
@@ -133,6 +149,7 @@ tracked successive Laravel majors over the 1.x codebase.
 Initial releases supporting M-Pesa Express, C2B, B2C, B2B, Account Balance,
 Transaction Status and Reversal on Laravel 5.5+.
 
+[5.4.0]: https://github.com/starnerz/laravel-daraja/compare/v5.3.1...v5.4.0
 [5.3.1]: https://github.com/starnerz/laravel-daraja/compare/v5.3.0...v5.3.1
 [5.3.0]: https://github.com/starnerz/laravel-daraja/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/starnerz/laravel-daraja/compare/v5.1.0...v5.2.0

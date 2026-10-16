@@ -6,10 +6,16 @@ namespace Starnerz\LaravelDaraja\Exceptions;
 
 class ConfigurationException extends DarajaException
 {
+    public function docsUrl(): string
+    {
+        return self::DOCS.'/reference/configuration/';
+    }
+
     public static function missing(string $key): self
     {
         return new self(
-            "The [laravel-daraja.{$key}] configuration value is required but has not been set.",
+            "The [laravel-daraja.{$key}] configuration value is required but has not been set. ".
+            'See '.self::DOCS.'/reference/configuration/',
         );
     }
 

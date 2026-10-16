@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+/*
+ * Every option below is explained, with its .env key, at
+ * https://laraveldaraja.com/reference/configuration/
+ */
+
 return [
 
     /*
@@ -12,6 +17,8 @@ return [
     | Which Daraja environment to talk to: "sandbox" or "live". This selects
     | the API host and the public certificate used to encrypt the initiator
     | password into a SecurityCredential.
+    |
+    | Before switching to "live": https://laraveldaraja.com/guides/going-live/
     |
     */
 
@@ -60,6 +67,8 @@ return [
     |
     | Supported types: paybill, till, msisdn
     |
+    | Guide: https://laraveldaraja.com/guides/security-credentials/
+    |
     */
 
     'initiator' => [
@@ -91,6 +100,8 @@ return [
     | details on the M-Pesa organisation portal. Registration for pulling is a
     | one-time operation per short code.
     |
+    | Guide: https://laraveldaraja.com/apis/pull-transactions/
+    |
     */
 
     'pull' => [
@@ -106,6 +117,8 @@ return [
     | call. Store it — bulk invoicing sends it as an "appKey" header and
     | Safaricom does not return it again.
     |
+    | Guide: https://laraveldaraja.com/apis/bill-manager/
+    |
     */
 
     'bill_manager' => [
@@ -116,6 +129,10 @@ return [
     |--------------------------------------------------------------------------
     | M-Pesa Express (STK Push)
     |--------------------------------------------------------------------------
+    |
+    | Reference: https://laraveldaraja.com/apis/mpesa-express/
+    | Tutorial:  https://laraveldaraja.com/tutorials/stk-push/
+    |
     */
 
     'stk' => [
@@ -132,6 +149,9 @@ return [
     | Every value here may be either an absolute URL or the name of a route in
     | your application, which the package resolves with route(). Safaricom
     | requires publicly reachable HTTPS endpoints.
+    |
+    | Guide: https://laraveldaraja.com/guides/callbacks/
+    | Testing from your own machine: https://laraveldaraja.com/tutorials/callbacks-localhost/
     |
     */
 
@@ -223,6 +243,8 @@ return [
     | Opt-in callback endpoints. When enabled the package registers routes that
     | accept Safaricom callbacks and dispatch the matching event, so you only
     | need to write listeners. Disabled by default.
+    |
+    | Guide: https://laraveldaraja.com/guides/callbacks/
     |
     */
 

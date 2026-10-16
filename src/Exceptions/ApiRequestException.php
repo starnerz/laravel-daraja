@@ -23,6 +23,27 @@ class ApiRequestException extends DarajaException
         parent::__construct($message, $status, $previous);
     }
 
+    public function docsUrl(): string
+    {
+        return self::DOCS.'/reference/error-codes/';
+    }
+
+    /**
+     * The message stays Safaricom's own words, since applications store and
+     * show it; the explanation and identifiers go to the log instead.
+     *
+     * @return array<string, mixed>
+     */
+    public function context(): array
+    {
+        return array_filter([
+            'docs' => $this->docsUrl(),
+            'error_code' => $this->errorCode,
+            'request_id' => $this->requestId,
+            'status' => $this->status ?: null,
+        ]);
+    }
+
     /**
      * Build an exception from a failed Daraja response.
      *
