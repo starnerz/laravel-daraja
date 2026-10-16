@@ -8,10 +8,16 @@ use Throwable;
 
 class AuthenticationException extends DarajaException
 {
+    public function docsUrl(): string
+    {
+        return self::DOCS.'/getting-started/configuration/';
+    }
+
     public static function tokenRequestFailed(string $reason, int $status = 0, ?Throwable $previous = null): self
     {
         return new self(
-            "Could not obtain a Daraja access token: {$reason}",
+            'Could not obtain a Daraja access token: '.rtrim($reason, '. ').'. '.
+            'See '.self::DOCS.'/getting-started/configuration/',
             $status,
             $previous,
         );
@@ -21,7 +27,8 @@ class AuthenticationException extends DarajaException
     {
         return new self(
             'The Daraja authorization endpoint did not return an access_token. '.
-            'Check that your consumer key and secret belong to the environment set in [laravel-daraja.mode].',
+            'Check that your consumer key and secret belong to the environment set in [laravel-daraja.mode]. '.
+            'See '.self::DOCS.'/getting-started/configuration/',
         );
     }
 }

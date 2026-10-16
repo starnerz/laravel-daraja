@@ -31,6 +31,9 @@ class ShowAccessToken extends Command
         $this->components->twoColumnDetail('Mode', (string) config('laravel-daraja.mode'));
         $this->components->twoColumnDetail('Access token', $token);
 
+        $this->newLine();
+        $this->components->info('Credentials work. Next, take a payment: '.DarajaException::DOCS.'/tutorials/stk-push/');
+
         return self::SUCCESS;
     }
 }
