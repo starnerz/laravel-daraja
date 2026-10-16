@@ -4,14 +4,8 @@ Every Safaricom M-Pesa Daraja API, as ordinary Laravel code. Seventeen APIs —
 STK Push, C2B, B2C, B2B, Dynamic QR, M-Pesa Ratiba, Bill Manager and the rest —
 with typed responses, cached tokens, and callbacks you can actually test.
 
-📖 **[Documentation](https://laraveldaraja.com/)** ·
-[Install](https://laraveldaraja.com/getting-started/installation/) ·
-[STK Push](https://laraveldaraja.com/apis/mpesa-express/) ·
-[Going live](https://laraveldaraja.com/guides/going-live/)
-
-```php
-Daraja::stk()->push(phone: '0712345678', amount: 1500, accountReference: 'INV-001');
-```
+📖 **[Documentation: laraveldaraja.com](https://laraveldaraja.com/)** — new here? Start with the
+[STK Push tutorial](https://laraveldaraja.com/tutorials/stk-push/).
 
 [![Tests](https://github.com/starnerz/laravel-daraja/actions/workflows/tests.yml/badge.svg)](https://github.com/starnerz/laravel-daraja/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/starnerz/laravel-daraja/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/starnerz/laravel-daraja/actions/workflows/static-analysis.yml)
@@ -19,121 +13,79 @@ Daraja::stk()->push(phone: '0712345678', amount: 1500, accountReference: 'INV-00
 [![Downloads](https://img.shields.io/packagist/dt/starnerz/laravel-daraja.svg)](https://packagist.org/packages/starnerz/laravel-daraja)
 [![License](https://img.shields.io/packagist/l/starnerz/laravel-daraja.svg)](LICENSE)
 
-## Requirements
-
-- PHP 8.3+
-- Laravel 12 or 13
-
-## Installation
+## At a glance
 
 ```bash
 composer require starnerz/laravel-daraja
 ```
 
-```dotenv
-DARAJA_MODE=sandbox
-DARAJA_CONSUMER_KEY=your-consumer-key
-DARAJA_CONSUMER_SECRET=your-consumer-secret
-DARAJA_STK_SHORTCODE=174379
-DARAJA_STK_PASS_KEY=your-passkey
-DARAJA_STK_CALLBACK_URL=https://your-domain/daraja/stk
-```
-
-Verify the credentials:
-
-```bash
-php artisan daraja:token
-```
-
-## Prompt a customer to pay
-
 ```php
 use Starnerz\LaravelDaraja\Facades\Daraja;
 
-$response = Daraja::stk()->push(
-    phone: '0712345678',       // any Kenyan format
-    amount: 1500,
-    accountReference: 'INV-001',
-);
-
-$response->accepted();          // Safaricom sent the prompt
-$response->checkoutRequestId;   // identifies this attempt
+$response = Daraja::stk()->push(phone: '0712345678', amount: 1500, accountReference: 'INV-001');
 ```
-
-The payment result arrives later on your callback URL:
 
 ```php
 use Starnerz\LaravelDaraja\Events\StkCallbackReceived;
 
 Event::listen(function (StkCallbackReceived $event) {
     if ($event->callback->successful()) {
-        Order::markPaid(
-            $event->callback->checkoutRequestId,
-            $event->callback->receipt(),
-        );
+        Order::markPaid($event->callback->checkoutRequestId, $event->callback->receipt());
     }
 });
 ```
 
-## Several merchants in one application
+Requires PHP 8.3+ and Laravel 12 or 13. The credentials, `.env` keys and
+callback routes are in [Installation](https://laraveldaraja.com/getting-started/installation/) and
+[Configuration](https://laraveldaraja.com/getting-started/configuration/).
 
-Give a call its own credentials without touching configuration:
+## Before you take real money
 
-```php
-Daraja::using([
-    'consumer_key' => $merchant->consumer_key,
-    'consumer_secret' => $merchant->consumer_secret,
-    'stk.short_code' => $merchant->short_code,
-    'stk.pass_key' => $merchant->pass_key,
-], connection: $merchant->slug)->stk()->push(...);
-```
+The snippet above works in sandbox. These are where M-Pesa integrations break
+in production, and each has a page:
 
-Anything not given falls back to configuration. Nothing is set globally, so a
-queued job or long-lived worker can never inherit another merchant's
-credentials. The `connection` name is carried on `DarajaRequestSending` and
-`DarajaResponseReceived`.
+- **Callbacks that never arrive, or arrive twice.** A payment can succeed with
+  no callback reaching you, a confirmation can be delivered more than once, and
+  Pull Transactions only reaches back 48 hours.
+  [Reconciling payments](https://laraveldaraja.com/guides/reconciliation/)
+- **Trusting a callback.** Safaricom does not sign callbacks, so each one is a claim to
+  check, not a record. [Handling callbacks](https://laraveldaraja.com/guides/callbacks/)
+- **Going live.** Production credentials, operator roles and Safaricom's
+  approval. [Going live](https://laraveldaraja.com/guides/going-live/)
+- **Testing without a phone.** `Http::fake()` drives the whole package.
+  [Testing](https://laraveldaraja.com/guides/testing/)
+
+## Tutorials
+
+Complete integrations, from an empty Laravel application to a payment you can
+prove arrived:
+
+1. [Accept M-Pesa payments](https://laraveldaraja.com/tutorials/stk-push/)
+2. [Testing callbacks on localhost](https://laraveldaraja.com/tutorials/callbacks-localhost/)
+3. [M-Pesa checkout with Livewire](https://laraveldaraja.com/tutorials/livewire-checkout/)
+4. [M-Pesa checkout for a SPA or mobile app](https://laraveldaraja.com/tutorials/api-checkout/)
+5. [Receive Paybill and till payments](https://laraveldaraja.com/tutorials/c2b-paybill/)
+6. [Take payment by QR code](https://laraveldaraja.com/tutorials/qr-payments/)
+7. [Send money to customers](https://laraveldaraja.com/tutorials/b2c-payouts/)
+8. [Subscriptions and recurring payments](https://laraveldaraja.com/tutorials/subscriptions/)
+9. [One app, many short codes](https://laraveldaraja.com/tutorials/multi-tenant/)
 
 ## Supported APIs
 
-| | |
-|---|---|
-| M-Pesa Express | `Daraja::stk()->push()` / `->query()` |
-| Customer to Business | `Daraja::c2b()->registerUrls()` / `->simulatePayBill()` |
-| Business to Customer | `Daraja::b2c()->business()` / `->salary()` / `->promotion()` |
-| Business to Pochi | `Daraja::b2c()->pochi()` |
-| Business to Business | `Daraja::b2b()->payBill()` / `->buyGoods()` / `->accountTopUp()` |
-| B2B Express Checkout | `Daraja::b2bExpress()->push()` |
-| Account Balance | `Daraja::balance()->query()` |
-| Transaction Status | `Daraja::transaction()->query()` |
-| Reversal | `Daraja::reversal()->reverse()` |
-| Dynamic QR | `Daraja::qr()->generate()` |
-| M-Pesa Ratiba | `Daraja::standingOrder()->create()` |
-| Bill Manager | `Daraja::billManager()->invoice()` |
-| Pull Transactions | `Daraja::pull()->query()` |
-| Lipa na Bonga | `Daraja::bonga()->redeem()` |
+| Taking payments | Paying out | Keeping the books |
+|---|---|---|
+| [M-Pesa Express (STK Push)](https://laraveldaraja.com/apis/mpesa-express/) | [Business to Customer](https://laraveldaraja.com/apis/b2c/) | [Account Balance](https://laraveldaraja.com/apis/account-services/) |
+| [Customer to Business](https://laraveldaraja.com/apis/c2b/) | [Business to Pochi](https://laraveldaraja.com/apis/b2c/) | [Transaction Status](https://laraveldaraja.com/apis/account-services/) |
+| [Dynamic QR](https://laraveldaraja.com/apis/dynamic-qr/) | [Business to Business](https://laraveldaraja.com/apis/b2b/) | [Reversal](https://laraveldaraja.com/apis/account-services/) |
+| [M-Pesa Ratiba](https://laraveldaraja.com/apis/standing-orders/) | [B2B Express Checkout](https://laraveldaraja.com/apis/b2b/) | [Pull Transactions](https://laraveldaraja.com/apis/pull-transactions/) |
+| [Lipa na Bonga](https://laraveldaraja.com/apis/lipa-na-bonga/) | | [Bill Manager](https://laraveldaraja.com/apis/bill-manager/) |
 
-## Testing
-
-Built on Laravel's HTTP client, so `Http::fake()` drives the whole package — no
-sandbox credentials, network or handset required.
-
-```php
-Http::fake([
-    '*/oauth/*' => Http::response(['access_token' => 'test']),
-    '*/mpesa/stkpush/*' => Http::response(['ResponseCode' => '0']),
-]);
-```
-
-See the [testing guide](https://laraveldaraja.com/guides/testing/).
+Every call and endpoint: [API overview](https://laraveldaraja.com/apis/overview/).
 
 ## Upgrading from 4.x
 
-v5 is a rewrite: the facade is now `Daraja`, responses are typed objects, and
-several endpoints moved (C2B to v2, B2C to v3). See the
-[upgrade guide](https://laraveldaraja.com/upgrade/v4-to-v5/).
-
-Laravel 10 and 11 are not supported — both are past end of life and carry
-unpatched advisories. Applications on those versions should stay on `^4.0`.
+v5 is a rewrite. See the [upgrade guide](https://laraveldaraja.com/upgrade/v4-to-v5/). Laravel 10
+and 11 are not supported; applications on those versions should stay on `^4.0`.
 
 ## Contributing
 
