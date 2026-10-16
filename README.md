@@ -139,6 +139,17 @@ unpatched advisories. Applications on those versions should stay on `^4.0`.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Help and Mizani
+
+Questions about the package belong in the issue tracker. If you would rather
+have an integration built or reviewed, the maintainer takes that on as paid
+work through [Eazysoft](https://eazysoft.africa/contact).
+
+[Mizani](https://mizani.eazysoft.africa) is the paid M-Pesa dashboard built on
+this package: every payment, the callbacks that never arrived, and
+reconciliation against Safaricom, in one screen. This package stays free and
+MIT-licensed either way.
+
 ## Security
 
 Report vulnerabilities to security@eazysoft.africa rather than the issue
