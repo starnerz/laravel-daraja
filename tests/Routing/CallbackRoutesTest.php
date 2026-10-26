@@ -253,3 +253,28 @@ it('says how to register a resolver when none is registered', function () {
             'shortcode' => '415010',
         ]);
 })->throws(ConfigurationException::class, 'Daraja::resolveC2BAccountUsing()');
+
+it('rejects a C2B Hakikisha token request without authorization header', function () {
+    $this->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->assertUnauthorized()
+        ->assertJson(['error' => 'unauthorized']);
+});
+
+it('rejects a C2B Hakikisha validation request without authorization header', function () {
+    $this->postJson('daraja/c2b-hakikisha/validation', [
+        'requestId' => 'request-1',
+        'timestamp' => '1793000000',
+        'accountNumber' => '66925336',
+        'shortcode' => '415010',
+    ])->assertUnauthorized()
+        ->assertJson(['errorMessage' => 'Invalid access token.']);
+});
+
+it('fails when C2B Hakikisha credentials are missing', function () {
+    config()->set('laravel-daraja.c2b_hakikisha.username', null);
+    $this->withoutExceptionHandling();
+
+    expect(fn () => $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials'),
+    )->toThrow(ConfigurationException::class, 'c2b_hakikisha.username');
+});

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Starnerz\LaravelDaraja\Apis;
 
 use Starnerz\LaravelDaraja\Data\SwapResponse;
+use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
 use Starnerz\LaravelDaraja\Support\PhoneNumber;
 
 /**
@@ -19,6 +20,10 @@ final class Swap extends Api
         $response = $this->client->post(self::ENDPOINT, [
             'customerNumber' => PhoneNumber::normalise($phone),
         ]);
+
+        if (isset($response['errorCode'])) {
+            throw ApiRequestException::fromPayload($response);
+        }
 
         return SwapResponse::fromArray($response);
     }

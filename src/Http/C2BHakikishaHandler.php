@@ -38,7 +38,6 @@ final class C2BHakikishaHandler
         $this->accountResolver = $callback;
     }
 
-
     /**
      * @return array{0: array<string, mixed>, 1: int}
      *

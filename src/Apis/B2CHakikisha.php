@@ -6,6 +6,7 @@ namespace Starnerz\LaravelDaraja\Apis;
 
 use Illuminate\Support\Str;
 use Starnerz\LaravelDaraja\Data\B2CHakikishaResponse;
+use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
 use Starnerz\LaravelDaraja\Support\PhoneNumber;
 
 /**
@@ -33,6 +34,10 @@ final class B2CHakikisha extends Api
                 'shortcode' => $this->initiatorShortCode($shortCode),
             ],
         ]);
+
+        if (isset($response['errorCode'])) {
+            throw ApiRequestException::fromPayload($response);
+        }
 
         return B2CHakikishaResponse::fromArray($response);
     }

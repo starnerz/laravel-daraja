@@ -44,4 +44,9 @@ final readonly class B2CHakikishaResponse
     {
         return $this->status === '200';
     }
+
+    public function fullName(): string
+    {
+        return trim((string) preg_replace('/\s+/', ' ', "{$this->firstName} {$this->middleName} {$this->lastName}"));
+    }
 }

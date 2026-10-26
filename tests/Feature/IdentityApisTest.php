@@ -96,6 +96,7 @@ it('checks a recipient name before a B2C payout', function () {
     expect($response->successful())->toBeTrue()
         ->and($response->firstName)->toBe('Jane')
         ->and($response->middleName)->toBe('M******')
+        ->and($response->fullName())->toBe('Jane M****** K******')
         ->and(identitySentBody('b2c/hakikisha/v1/hakikisha'))->toBe([
             'header' => ['requestID' => 'my-request', 'timestamp' => '1793000000'],
             'body' => ['msisdn' => '254712345678', 'shortcode' => '600000'],
@@ -116,7 +117,19 @@ it('calls the identity APIs with the settings of Daraja::using()', function () {
         ->validate('0712345678', MobileIdType::NationalId, '12345678');
 
     expect(identitySentBody('KYC-validation/validateID')['shortCode'])->toBe('777777');
+
+    Daraja::using(['initiator.short_code' => '888888'])->b2cHakikisha()
+        ->validate('0712345678');
+
+    expect(identitySentBody('b2c/hakikisha/v1/hakikisha')['body']['shortcode'])->toBe('888888');
 });
+
+it('rejects invalid phone numbers across identity endpoints', function (string $phone) {
+    expect(fn () => Daraja::simSwap()->query($phone))->toThrow(DarajaException::class);
+    expect(fn () => Daraja::b2cHakikisha()->validate($phone))->toThrow(DarajaException::class);
+    expect(fn () => Daraja::mobileNumberValidation()->validate($phone, MobileIdType::NationalId, '12345678'))
+        ->toThrow(DarajaException::class);
+})->with(['not-a-number', '254812345678', '0712']);
 
 /**
  * @return array<string, mixed>
