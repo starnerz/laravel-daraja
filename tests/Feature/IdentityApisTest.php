@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
 use Starnerz\LaravelDaraja\Data\MobileNumberValidationResponse;
+use Starnerz\LaravelDaraja\Data\SwapResponse;
 use Starnerz\LaravelDaraja\Enums\MobileIdType;
 use Starnerz\LaravelDaraja\Exceptions\DarajaException;
 use Starnerz\LaravelDaraja\Facades\Daraja;
@@ -89,6 +90,15 @@ it('queries the last SIM swap date', function () {
         ->and(identitySentBody('imsi/v2/checkATI'))->toBe(['customerNumber' => '254712345678']);
 });
 
+it('accepts Safaricom documented success response codes for SIM swap checks', function () {
+    $response = SwapResponse::fromArray([
+        'responseCode' => '200',
+        'responseDesc' => 'Success',
+    ]);
+
+    expect($response->successful())->toBeTrue();
+});
+
 it('checks a recipient name before a B2C payout', function () {
     $response = Daraja::b2cHakikisha()->validate(
         '0712345678',
@@ -98,12 +108,12 @@ it('checks a recipient name before a B2C payout', function () {
 
     expect($response->successful())->toBeTrue()
         ->and($response->firstName)->toBe('Jane')
-        ->and($response->middleName)->toBe('M******');
+        ->and($response->middleName)->toBe('M******')
+        ->and(identitySentBody('b2c/hakikisha/v1/hakikisha'))->toBe([
+            'header' => ['requestID' => 'my-request', 'timestamp' => '1793000000'],
+            'body' => ['msisdn' => '254712345678', 'shortcode' => '600000'],
+        ]);
 
-    expect(identitySentBody('b2c/hakikisha/v1/hakikisha'))->toBe([
-        'header' => ['requestID' => 'my-request', 'timestamp' => '1793000000'],
-        'body' => ['msisdn' => '254712345678', 'shortcode' => '600000'],
-    ]);
 });
 
 it('generates the B2C Hakikisha request identifiers', function () {

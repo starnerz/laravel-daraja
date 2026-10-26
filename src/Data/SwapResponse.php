@@ -33,6 +33,6 @@ final readonly class SwapResponse
 
     public function successful(): bool
     {
-        return $this->responseCode === '0';
+        return in_array($this->responseCode, ['0', '200'], true);
     }
 }

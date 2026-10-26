@@ -29,16 +29,108 @@ request reference is generated if one is not supplied.
 
 ## SIM Swap
 
-Query the last SIM swap date for a phone number:
+Check when a Safaricom SIM was most recently swapped. Safaricom only reports
+swaps from the previous three months; older swaps are represented by
+`01-01-1900 00:00`.
 
 ```php
 $result = Daraja::simSwap()->query('0712345678');
 
-$result->lastSwapDate;
+if ($result->successful()) {
+    $result->lastSwapDate;
+}
 ```
 
-The phone is normalized to international format before sending. The service
-uses `imsi/v2/checkATI`; IMSI lookup is a separate API.
+The package obtains and sends the Daraja access token automatically. It
+normalizes the phone to international format and posts `customerNumber` to
+`imsi/v2/checkATI`.
+
+### Access and onboarding
+
+This is a commercial API and requires a signed commercial agreement and
+Safaricom enablement. Request access through `apisupport@safaricom.co.ke` or
+your Safaricom account manager. Once the agreement is complete, Safaricom
+enables the partner in sandbox and production.
+
+Before testing, create a Daraja developer account and sandbox app, then
+configure that app's consumer key and secret as described in
+[Configuration](https://laraveldaraja.com/getting-started/configuration/).
+Sandbox simulator test data is available in the developer portal. The API is
+available over the internet.
+
+| Environment | Endpoint |
+|---|---|
+| Sandbox | `https://sandbox.safaricom.co.ke/imsi/v2/checkATI` |
+| Production | `https://api.safaricom.co.ke/imsi/v2/checkATI` |
+
+### Request and response
+
+The request body contains the customer's MSISDN in 12-digit international
+format:
+
+```json
+{
+  "customerNumber": "254722000000"
+}
+```
+
+`Daraja::simSwap()->query()` accepts a locally formatted number as well; the
+package normalizes it before sending.
+
+```json
+{
+  "requestRefID": "4277-415525-1",
+  "responseCode": "200",
+  "responseDesc": "Success",
+  "lastSwapDate": "01-01-1900 00:00"
+}
+```
+
+`requestRefID` identifies the request. `responseCode` and `responseDesc`
+describe its processing status; Safaricom documents `200` as a successful
+submission. `lastSwapDate` is the most recent swap date, or the default date
+when no swap is available within the three-month lookup window.
+
+The API is described as asynchronous by Safaricom. Treat the response status
+as the submission outcome and follow the partner's enabled integration
+arrangement for any subsequent processing.
+
+### Commercial charges
+
+Monthly successful calls are charged by volume. Prices below are in KES per
+call, exclusive of VAT; unsuccessful calls are not charged.
+
+| Calls per month | KES per call |
+|---|---:|
+| 0–200,000 | 1.20 |
+| 200,000–500,000 | 0.90 |
+| 500,000–1,000,000 | 0.70 |
+| 1,000,000–5,000,000 | 0.60 |
+| More than 5,000,000 | 0.50 |
+
+### Common HTTP errors
+
+| Status | Meaning |
+|---|---|
+| 400 | Invalid request |
+| 401 | Authentication required or invalid |
+| 403 | The app is not permitted to use the resource |
+| 404 | Resource not found |
+| 405 | HTTP method not supported |
+| 408, 504 | Request or upstream timeout |
+| 429 | Rate limit exceeded |
+| 500, 501, 502, 503 | Server, gateway, or availability failure |
+
+### Typical uses
+
+Partners use recent-swap checks as one input to risk controls: reviewing
+high-risk banking activity, strengthening mobile-banking onboarding,
+screening cheque clearance and high-value payouts, pausing password resets
+after a recent swap, and supporting fraud or chargeback investigations. A swap
+result should be combined with the partner's own risk policy rather than used
+as the sole decision signal.
+
+IMSI lookup is a separate API from this SIM-swap check.
 
 ## B2C Hakikisha
 

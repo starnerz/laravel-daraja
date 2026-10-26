@@ -5,7 +5,7 @@ walked page by page on 15 August 2026.
 
 **Scope:** Payments, Disbursement, Experience, and selected Security APIs.
 Tax Remittance, Mobile Data Bundles, IoT SIM Management, IMSI and Age on Network
-remain out of scope.
+lookups remain out of scope. The separate SIM Swap check is implemented.
 
 ## Implemented
 
