@@ -69,7 +69,21 @@ it('generates a request reference for mobile number validation', function () {
         ->and(identitySentBody('KYC-validation/validateID')['idType'])->toBe('05');
 });
 
-it('reports a mobile identity mismatch even if the response status is true', function () {
+it('parses the documented mobile identity mismatch response', function () {
+    $response = MobileNumberValidationResponse::fromArray([
+        'responseRefID' => 'response-2',
+        'responseCode' => '4001',
+        'responseMessage' => 'Details do not match',
+        'status' => 'false',
+    ]);
+
+    expect($response->matches())->toBeFalse()
+        ->and($response->responseRefId)->toBe('response-2')
+        ->and($response->responseCode)->toBe('4001')
+        ->and($response->responseMessage)->toBe('Details do not match');
+});
+
+it('treats the mismatch response code as authoritative', function () {
     $response = MobileNumberValidationResponse::fromArray([
         'responseCode' => '4001',
         'status' => true,
