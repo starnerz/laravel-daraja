@@ -102,6 +102,9 @@ this package: every payment, the callbacks that never arrived, and
 reconciliation against Safaricom, in one screen. This package stays free and
 MIT-licensed either way.
 
+If it saved you time, [support its development](https://paystack.shop/pay/laravel-daraja)
+with a tip of any amount, by M-Pesa or card.
+
 ## Security
 
 Report vulnerabilities to security@eazysoft.africa rather than the issue

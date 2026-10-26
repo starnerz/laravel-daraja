@@ -34,6 +34,12 @@
         "source": "https://github.com/starnerz/laravel-daraja",
         "docs": "https://laraveldaraja.com/"
     },
+    "funding": [
+        {
+            "type": "custom",
+            "url": "https://paystack.shop/pay/laravel-daraja"
+        }
+    ],
     "require": {
         "php": "^8.3",
         "ext-json": "*",
