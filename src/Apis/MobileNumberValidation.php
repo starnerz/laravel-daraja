@@ -7,6 +7,7 @@ namespace Starnerz\LaravelDaraja\Apis;
 use Illuminate\Support\Str;
 use Starnerz\LaravelDaraja\Data\MobileNumberValidationResponse;
 use Starnerz\LaravelDaraja\Enums\MobileIdType;
+use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
 use Starnerz\LaravelDaraja\Exceptions\DarajaException;
 use Starnerz\LaravelDaraja\Support\PhoneNumber;
 
@@ -37,6 +38,10 @@ final class MobileNumberValidation extends Api
             'idType' => $idType->value,
             'idNumber' => trim($idNumber),
         ]);
+
+        if (isset($response['errorCode'])) {
+            throw ApiRequestException::fromPayload($response);
+        }
 
         return MobileNumberValidationResponse::fromArray($response);
     }

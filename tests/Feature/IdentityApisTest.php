@@ -65,6 +65,15 @@ it('reports a mobile identity mismatch', function () {
         ->and($response->status)->toBe('false');
 });
 
+it('treats the response code as authoritative over status', function () {
+    $response = MobileNumberValidationResponse::fromArray([
+        'responseCode' => '4001',
+        'status' => true,
+    ]);
+
+    expect($response->matches())->toBeFalse();
+});
+
 it('rejects an empty identity document number', function () {
     Daraja::mobileNumberValidation()->validate('0712345678', MobileIdType::NationalId, ' ');
 })->throws(DarajaException::class, 'identity document number');

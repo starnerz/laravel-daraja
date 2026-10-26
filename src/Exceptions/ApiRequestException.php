@@ -72,15 +72,32 @@ class ApiRequestException extends DarajaException
             );
         }
 
+        return self::fromPayload($body, $status, $previous, self::truncate($response->body()));
+    }
+
+    /**
+     * Build an exception from a decoded Daraja error payload.
+     *
+     * Some endpoints may return gateway errors in a successful HTTP response.
+     * `$fallback` is the message when the payload names none; fromResponse()
+     * passes the raw body, as it always has.
+     *
+     * @param  array<string, mixed>  $body
+     */
+    public static function fromPayload(array $body, int $status = 0, ?Throwable $previous = null, ?string $fallback = null): self
+    {
         $message = $body['errorMessage']
             ?? $body['ResponseDescription']
             ?? $body['ResultDesc']
-            ?? self::truncate($response->body());
+            ?? $fallback
+            ?? 'The Safaricom Daraja API returned an error.';
 
         return new self(
             'Safaricom Daraja: '.$message,
             errorCode: isset($body['errorCode']) ? (string) $body['errorCode'] : null,
-            requestId: isset($body['requestId']) ? (string) $body['requestId'] : null,
+            requestId: isset($body['responseId'])
+                ? (string) $body['responseId']
+                : (isset($body['requestId']) ? (string) $body['requestId'] : null),
             status: $status,
             payload: $body,
             previous: $previous,

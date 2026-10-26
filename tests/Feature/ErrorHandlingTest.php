@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Starnerz\LaravelDaraja\Enums\MobileIdType;
 use Starnerz\LaravelDaraja\Enums\Mode;
 use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
 use Starnerz\LaravelDaraja\Exceptions\ConfigurationException;
@@ -36,6 +37,53 @@ it('falls back to ResponseDescription then ResultDesc', function (array $body, s
     [['ResponseDescription' => 'Invalid short code'], 'Invalid short code'],
     [['ResultDesc' => 'Declined by limit rule'], 'Declined by limit rule'],
 ]);
+
+it('preserves Safaricom mobile validation error identifiers and details', function () {
+    fakeDaraja([
+        '*/KYC-validation/validateID' => Http::response([
+            'responseId' => 'gateway-response-1',
+            'errorCode' => '403.001',
+            'errorMessage' => 'subscription_not_available',
+        ], 403),
+    ]);
+
+    try {
+        Daraja::mobileNumberValidation()->validate(
+            '0712345678',
+            MobileIdType::NationalId,
+            '12345678',
+        );
+        $this->fail('Expected an ApiRequestException.');
+    } catch (ApiRequestException $exception) {
+        expect($exception->getMessage())->toContain('subscription_not_available')
+            ->and($exception->errorCode)->toBe('403.001')
+            ->and($exception->requestId)->toBe('gateway-response-1')
+            ->and($exception->payload['errorMessage'])->toBe('subscription_not_available');
+    }
+});
+
+it('throws for a Safaricom mobile validation error returned with HTTP success', function () {
+    fakeDaraja([
+        '*/KYC-validation/validateID' => Http::response([
+            'requestId' => 'gateway-request-1',
+            'errorCode' => '400',
+            'errorMessage' => 'Bad Request - Invalid MSISDN',
+        ]),
+    ]);
+
+    expect(fn () => Daraja::mobileNumberValidation()->validate(
+        '0712345678',
+        MobileIdType::NationalId,
+        '12345678',
+    ))->toThrow(ApiRequestException::class, 'Bad Request - Invalid MSISDN');
+});
+
+it('keeps the raw body as the message of a JSON error that names no message', function () {
+    fakeDaraja(['*/mpesa/stkpush/*' => Http::response(['fault' => 'quota'], 429)]);
+
+    expect(fn () => Daraja::stk()->push('0712345678', 100, 'INV-1'))
+        ->toThrow(ApiRequestException::class, 'Safaricom Daraja: {"fault":"quota"}');
+});
 
 it('handles a non-JSON error body', function () {
     fakeDaraja(['*/mpesa/stkpush/*' => Http::response('<html>502 Bad Gateway</html>', 502)]);

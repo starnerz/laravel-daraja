@@ -138,6 +138,30 @@ example:
 | `401.001` | Invalid access token |
 | `500` | Invalid parameter input |
 
+When Safaricom returns an `errorCode`, including in an otherwise successful
+HTTP response, validation throws `ApiRequestException`. Its `errorCode`,
+`getMessage()`, and `payload` preserve Safaricom's error code, message, and
+response body. The gateway's `responseId` (or `requestId`, when that field is
+used) is exposed as `requestId`:
+
+```php
+use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
+
+try {
+    $result = Daraja::mobileNumberValidation()->validate(
+        '0712345678',
+        MobileIdType::NationalId,
+        '12345678',
+    );
+} catch (ApiRequestException $exception) {
+    // Inspect $exception->errorCode and $exception->requestId.
+    // Safaricom's error text is in $exception->getMessage().
+}
+```
+
+`4000` and `4001` are normal validation outcomes, not API errors: they return
+a response object, and `matches()` is true only for the match result.
+
 ### Audience and use cases
 
 The API is intended for financial institutions, digital payment providers and
