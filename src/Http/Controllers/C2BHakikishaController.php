@@ -6,9 +6,12 @@ namespace Starnerz\LaravelDaraja\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Starnerz\LaravelDaraja\Daraja;
 use Starnerz\LaravelDaraja\Http\C2BHakikishaHandler;
 
+/**
+ * The two endpoints Safaricom calls for C2B Hakikisha: a token, then an
+ * account-name lookup made with it.
+ */
 class C2BHakikishaController
 {
     public function token(Request $request, C2BHakikishaHandler $handler): JsonResponse
@@ -21,15 +24,11 @@ class C2BHakikishaController
         return response()->json($payload, $status);
     }
 
-    public function validate(
-        Request $request,
-        Daraja $daraja,
-        C2BHakikishaHandler $handler,
-    ): JsonResponse {
+    public function validation(Request $request, C2BHakikishaHandler $handler): JsonResponse
+    {
         [$payload, $status] = $handler->validate(
             $request->header('Authorization'),
             $request->all(),
-            $daraja->c2bAccountResolver(),
         );
 
         return response()->json($payload, $status);

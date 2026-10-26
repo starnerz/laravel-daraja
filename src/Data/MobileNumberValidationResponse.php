@@ -31,12 +31,11 @@ final readonly class MobileNumberValidationResponse
         );
     }
 
+    /**
+     * 4000 is a match and 4001 a mismatch; `status` repeats it as a string.
+     */
     public function matches(): bool
     {
-        if (in_array($this->responseCode, ['4000', '4001'], true)) {
-            return $this->responseCode === '4000';
-        }
-
-        return in_array(strtolower($this->status), ['true', '1', 'match'], true);
+        return $this->responseCode === '4000';
     }
 }

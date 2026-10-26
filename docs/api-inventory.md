@@ -3,7 +3,8 @@
 Source: <https://developer.safaricom.co.ke/dashboard/apis> (authenticated dashboard),
 walked page by page on 15 August 2026.
 
-**Scope:** Payments, Disbursement, Experience, and selected Security APIs.
+**Scope:** Payments, Disbursement, Experience, and selected Security APIs
+(identity checks added in #10, October 2026).
 Tax Remittance, Mobile Data Bundles, IoT SIM Management, IMSI and Age on Network
 lookups remain out of scope. The separate SIM Swap check is implemented.
 

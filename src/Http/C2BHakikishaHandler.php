@@ -13,6 +13,10 @@ use Starnerz\LaravelDaraja\Exceptions\ConfigurationException;
 
 /**
  * Implements the partner-side C2B Hakikisha token and account lookup contract.
+ *
+ * A singleton, so the resolver registered at boot survives every request
+ * under Octane. Tokens live in the configured cache store, which must be
+ * shared when the application runs on more than one server.
  */
 final class C2BHakikishaHandler
 {
@@ -34,13 +38,6 @@ final class C2BHakikishaHandler
         $this->accountResolver = $callback;
     }
 
-    /**
-     * @return Closure(string, string): (?string)|null
-     */
-    public function accountResolver(): ?Closure
-    {
-        return $this->accountResolver;
-    }
 
     /**
      * @return array{0: array<string, mixed>, 1: int}
@@ -81,17 +78,23 @@ final class C2BHakikishaHandler
 
     /**
      * @param  array<string, mixed>  $payload
-     * @param  Closure(string, string): (?string)|null  $resolveAccountName
      * @return array{0: array<string, mixed>, 1: int}
      *
      * @throws InvalidArgumentException
      */
-    public function validate(
-        ?string $authorization,
-        array $payload,
-        ?Closure $resolveAccountName,
-    ): array {
+    public function validate(?string $authorization, array $payload): array
+    {
         $requestId = is_scalar($payload['requestId'] ?? null) ? (string) $payload['requestId'] : '';
+        $token = $this->bearerToken($authorization);
+
+        // Authenticated first, so a caller without a token learns nothing
+        // about what a well-formed request looks like.
+        if ($token === null || ! $this->cacheStore()->has($this->tokenKey($token))) {
+            return [
+                ['requestId' => $requestId, 'errorMessage' => 'Invalid access token.'],
+                401,
+            ];
+        }
 
         if ($requestId === ''
             || ! is_scalar($payload['timestamp'] ?? null)
@@ -106,22 +109,15 @@ final class C2BHakikishaHandler
             ], 422];
         }
 
-        $token = $this->bearerToken($authorization);
-
-        if ($token === null || ! $this->cacheStore()->has($this->tokenKey($token))) {
-            return [
-                ['requestId' => $requestId, 'errorMessage' => 'Invalid access token.'],
-                401,
-            ];
-        }
-
-        if ($resolveAccountName === null) {
-            throw ConfigurationException::missing('c2b_hakikisha.account_resolver');
+        if ($this->accountResolver === null) {
+            throw new ConfigurationException(
+                'No C2B Hakikisha account resolver is registered. Call Daraja::resolveC2BAccountUsing() in a service provider.',
+            );
         }
 
         $accountNumber = trim((string) $payload['accountNumber']);
         $shortcode = trim((string) $payload['shortcode']);
-        $accountName = $resolveAccountName($accountNumber, $shortcode);
+        $accountName = ($this->accountResolver)($accountNumber, $shortcode);
 
         if (! is_string($accountName) || trim($accountName) === '') {
             return [

@@ -1,6 +1,6 @@
 # Laravel Daraja
 
-Safaricom M-Pesa Daraja APIs, as ordinary Laravel code. More than twenty APIs —
+Safaricom M-Pesa Daraja APIs, as ordinary Laravel code. Twenty-one APIs —
 STK Push, C2B, B2C, B2B, Dynamic QR, M-Pesa Ratiba, Hakikisha and the rest —
 with typed responses, cached tokens, and callbacks you can actually test.
 
@@ -80,10 +80,9 @@ prove arrived:
 | [M-Pesa Ratiba](https://laraveldaraja.com/apis/standing-orders/) | [B2B Express Checkout](https://laraveldaraja.com/apis/b2b/) | [Pull Transactions](https://laraveldaraja.com/apis/pull-transactions/) |
 | [Lipa na Bonga](https://laraveldaraja.com/apis/lipa-na-bonga/) | | [Bill Manager](https://laraveldaraja.com/apis/bill-manager/) |
 
-Identity and account verification APIs include Mobile Number Validation,
-SIM-swap checks, B2C Hakikisha recipient verification, and the receiver-side
-C2B Hakikisha account-name lookup. See [their API reference](docs/api-specs/identity-and-hakikisha.md)
-for onboarding requirements and route setup.
+Checking who you deal with: [Mobile Number Validation, SIM Swap, B2C Hakikisha
+and C2B Hakikisha](https://laraveldaraja.com/apis/identity/). Safaricom enables
+these per app, after a commercial agreement.
 
 Every call and endpoint: [API overview](https://laraveldaraja.com/apis/overview/).
 

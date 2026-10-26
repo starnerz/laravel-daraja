@@ -9,6 +9,7 @@ use Starnerz\LaravelDaraja\Events\C2BValidationRequested;
 use Starnerz\LaravelDaraja\Events\ResultReceived;
 use Starnerz\LaravelDaraja\Events\StkCallbackReceived;
 use Starnerz\LaravelDaraja\Events\TimeoutReceived;
+use Starnerz\LaravelDaraja\Exceptions\ConfigurationException;
 use Starnerz\LaravelDaraja\Facades\Daraja;
 
 beforeEach(function () {
@@ -196,8 +197,59 @@ it('rejects an invalid C2B Hakikisha access token', function () {
 });
 
 it('rejects malformed C2B Hakikisha validation requests', function () {
-    $this->withHeader('Authorization', 'Bearer any')
+    $token = $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->json('access_token');
+
+    $this->withHeader('Authorization', "Bearer {$token}")
         ->postJson('daraja/c2b-hakikisha/validation', ['requestId' => 'request-1'])
         ->assertStatus(422)
         ->assertJson(['requestId' => 'request-1']);
 });
+
+it('checks the C2B Hakikisha token before the request body', function () {
+    $this->withHeader('Authorization', 'Bearer any')
+        ->postJson('daraja/c2b-hakikisha/validation', ['requestId' => 'request-1'])
+        ->assertUnauthorized();
+});
+
+it('refuses a C2B Hakikisha token for any other grant type', function () {
+    $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=password')
+        ->assertStatus(400)
+        ->assertJson(['error' => 'unsupported_grant_type']);
+});
+
+it('answers an unknown account with 400', function () {
+    Daraja::resolveC2BAccountUsing(fn (): ?string => null);
+
+    $token = $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->json('access_token');
+
+    $this->withHeader('Authorization', "Bearer {$token}")
+        ->postJson('daraja/c2b-hakikisha/validation', [
+            'requestId' => 'request-1',
+            'timestamp' => '1793000000',
+            'accountNumber' => 'nope',
+            'shortcode' => '415010',
+        ])
+        ->assertStatus(400)
+        ->assertJson(['errorMessage' => 'Invalid account number.']);
+});
+
+it('says how to register a resolver when none is registered', function () {
+    $this->withoutExceptionHandling();
+
+    $token = $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->json('access_token');
+
+    $this->withHeader('Authorization', "Bearer {$token}")
+        ->postJson('daraja/c2b-hakikisha/validation', [
+            'requestId' => 'request-1',
+            'timestamp' => '1793000000',
+            'accountNumber' => '66925336',
+            'shortcode' => '415010',
+        ]);
+})->throws(ConfigurationException::class, 'Daraja::resolveC2BAccountUsing()');

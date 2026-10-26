@@ -81,21 +81,15 @@ final class Daraja
     /**
      * Register the account-name lookup used by the C2B Hakikisha receiver.
      *
-     * Return null when the account number does not belong to the shortcode.
+     * Safaricom calls it before a customer pays to a paybill, so the customer
+     * sees whose account they are paying. Return the account name, or null when
+     * the account number does not belong to the shortcode.
      *
      * @param  Closure(string, string): (?string)  $callback
      */
     public function resolveC2BAccountUsing(Closure $callback): void
     {
         $this->app->make(C2BHakikishaHandler::class)->resolveAccountUsing($callback);
-    }
-
-    /**
-     * @return (Closure(string, string): (?string))|null
-     */
-    public function c2bAccountResolver(): ?Closure
-    {
-        return $this->app->make(C2BHakikishaHandler::class)->accountResolver();
     }
 
     /**

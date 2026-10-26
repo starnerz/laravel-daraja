@@ -17,7 +17,7 @@ use Starnerz\LaravelDaraja\Support\PhoneNumber;
  */
 final class MobileNumberValidation extends Api
 {
-    private const ENDPOINT = 'v1/KYC-validation/validateID';
+    private const string ENDPOINT = 'v1/KYC-validation/validateID';
 
     public function validate(
         string $phone,

@@ -56,10 +56,7 @@ it('keeps secrets out of the request event', function () {
 it('redacts identity data and nested customer names from request and response events', function () {
     Event::fake([DarajaRequestSending::class, DarajaResponseReceived::class]);
     fakeDaraja([
-        '*/KYC-validation/validateID' => Http::response([
-            'responseCode' => '4000',
-            'status' => true,
-        ]),
+        '*/KYC-validation/validateID' => Http::response(payload('mobile-number-validation-match')),
         '*/mpesa/b2c/hakikisha/v1/hakikisha' => Http::response([
             'header' => ['status' => '200'],
             'body' => [
@@ -78,8 +75,8 @@ it('redacts identity data and nested customer names from request and response ev
             return false;
         }
 
-        expect($event->payload['msisdn'])->toBe('[redacted]')
-            ->and($event->payload['idNumber'])->toBe('[redacted]');
+        expect($event->payload['idNumber'])->toBe('[redacted]')
+            ->and($event->payload['msisdn'])->toBe('254712345678');
 
         return true;
     });
@@ -95,6 +92,19 @@ it('redacts identity data and nested customer names from request and response ev
 
         return true;
     });
+});
+
+it('keeps the phone number on the STK request event', function () {
+    // Listeners match a payment to its prompt by phone number.
+    Event::fake([DarajaRequestSending::class]);
+    fakeDaraja();
+
+    Daraja::stk()->push('0712345678', 100, 'INV-1');
+
+    Event::assertDispatched(
+        DarajaRequestSending::class,
+        fn (DarajaRequestSending $event): bool => ($event->payload['PhoneNumber'] ?? null) === '254712345678',
+    );
 });
 
 it('reports the response with its status and elapsed time', function () {

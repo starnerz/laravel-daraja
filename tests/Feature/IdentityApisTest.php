@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
 use Starnerz\LaravelDaraja\Data\MobileNumberValidationResponse;
-use Starnerz\LaravelDaraja\Data\SwapResponse;
 use Starnerz\LaravelDaraja\Enums\MobileIdType;
 use Starnerz\LaravelDaraja\Exceptions\DarajaException;
 use Starnerz\LaravelDaraja\Facades\Daraja;
@@ -12,18 +11,9 @@ use Starnerz\LaravelDaraja\Facades\Daraja;
 beforeEach(function () {
     cache()->flush();
     fakeDaraja([
-        '*/KYC-validation/validateID' => Http::response([
-            'responseRefID' => 'request-1',
-            'responseCode' => '4000',
-            'responseMessage' => 'Match found',
-            'status' => true,
-        ]),
-        '*/imsi/v2/checkATI' => Http::response([
-            'requestRefID' => 'request-2',
-            'responseCode' => '0',
-            'responseDesc' => 'Success',
-            'lastSwapDate' => '2026-01-15',
-        ]),
+        '*/KYC-validation/validateID' => Http::response(payload('mobile-number-validation-match')),
+        '*/imsi/v2/checkATI' => Http::response(payload('sim-swap')),
+        // Not yet checked against the portal; see docs/api-specs/identity-and-hakikisha.md.
         '*/mpesa/b2c/hakikisha/v1/hakikisha' => Http::response([
             'header' => [
                 'requestID' => 'request-3',
@@ -49,11 +39,10 @@ it('validates a Safaricom number against an identity document', function () {
     );
 
     expect($response->matches())->toBeTrue()
-        ->and($response->responseMessage)->toBe('Match found');
+        ->and($response->responseRefId)->toBe('1771929697')
+        ->and($response->responseMessage)->toBe('Details match successfully');
 
-    $body = identitySentBody('KYC-validation/validateID');
-
-    expect($body)->toMatchArray([
+    expect(identitySentBody('KYC-validation/validateID'))->toMatchArray([
         'requestRefID' => 'my-request',
         'shortCode' => '600000',
         'msisdn' => '254712345678',
@@ -69,13 +58,11 @@ it('generates a request reference for mobile number validation', function () {
         ->and(identitySentBody('KYC-validation/validateID')['idType'])->toBe('05');
 });
 
-it('reports a mobile identity mismatch even if the response status is true', function () {
-    $response = MobileNumberValidationResponse::fromArray([
-        'responseCode' => '4001',
-        'status' => true,
-    ]);
+it('reports a mobile identity mismatch', function () {
+    $response = MobileNumberValidationResponse::fromArray(payload('mobile-number-validation-mismatch'));
 
-    expect($response->matches())->toBeFalse();
+    expect($response->matches())->toBeFalse()
+        ->and($response->status)->toBe('false');
 });
 
 it('rejects an empty identity document number', function () {
@@ -86,17 +73,8 @@ it('queries the last SIM swap date', function () {
     $response = Daraja::simSwap()->query('0712345678');
 
     expect($response->successful())->toBeTrue()
-        ->and($response->lastSwapDate)->toBe('2026-01-15')
+        ->and($response->lastSwapDate)->toBe('01-01-1900 00:00')
         ->and(identitySentBody('imsi/v2/checkATI'))->toBe(['customerNumber' => '254712345678']);
-});
-
-it('accepts Safaricom documented success response codes for SIM swap checks', function () {
-    $response = SwapResponse::fromArray([
-        'responseCode' => '200',
-        'responseDesc' => 'Success',
-    ]);
-
-    expect($response->successful())->toBeTrue();
 });
 
 it('checks a recipient name before a B2C payout', function () {
@@ -113,7 +91,6 @@ it('checks a recipient name before a B2C payout', function () {
             'header' => ['requestID' => 'my-request', 'timestamp' => '1793000000'],
             'body' => ['msisdn' => '254712345678', 'shortcode' => '600000'],
         ]);
-
 });
 
 it('generates the B2C Hakikisha request identifiers', function () {
@@ -125,9 +102,12 @@ it('generates the B2C Hakikisha request identifiers', function () {
         ->and($body['header']['timestamp'])->toMatch('/^\d+$/');
 });
 
-it('rejects a shortcode outside the B2C Hakikisha format', function () {
-    Daraja::b2cHakikisha()->validate('0712345678', shortCode: '12A');
-})->throws(DarajaException::class, 'shortcode of 5 to 7 digits');
+it('calls the identity APIs with the settings of Daraja::using()', function () {
+    Daraja::using(['initiator.short_code' => '777777'])->mobileNumberValidation()
+        ->validate('0712345678', MobileIdType::NationalId, '12345678');
+
+    expect(identitySentBody('KYC-validation/validateID')['shortCode'])->toBe('777777');
+});
 
 /**
  * @return array<string, mixed>

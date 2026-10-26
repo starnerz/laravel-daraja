@@ -242,7 +242,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When enabled, every Daraja request and response is logged. Credentials,
-    | phone numbers, identity numbers and Hakikisha customer names are redacted.
+    | identity numbers and Hakikisha customer names are redacted.
     | Leave "channel" null to use your application's default channel.
     |
     */

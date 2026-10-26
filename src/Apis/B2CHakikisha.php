@@ -6,7 +6,6 @@ namespace Starnerz\LaravelDaraja\Apis;
 
 use Illuminate\Support\Str;
 use Starnerz\LaravelDaraja\Data\B2CHakikishaResponse;
-use Starnerz\LaravelDaraja\Exceptions\DarajaException;
 use Starnerz\LaravelDaraja\Support\PhoneNumber;
 
 /**
@@ -24,12 +23,6 @@ final class B2CHakikisha extends Api
         ?string $requestId = null,
         ?string $timestamp = null,
     ): B2CHakikishaResponse {
-        $shortCode = $this->initiatorShortCode($shortCode);
-
-        if (! preg_match('/^\d{5,7}$/', $shortCode)) {
-            throw new DarajaException('B2C Hakikisha requires a shortcode of 5 to 7 digits.');
-        }
-
         $response = $this->client->post(self::ENDPOINT, [
             'header' => [
                 'requestID' => $requestId ?? (string) Str::uuid(),
@@ -37,7 +30,7 @@ final class B2CHakikisha extends Api
             ],
             'body' => [
                 'msisdn' => PhoneNumber::normalise($phone),
-                'shortcode' => $shortCode,
+                'shortcode' => $this->initiatorShortCode($shortCode),
             ],
         ]);
 

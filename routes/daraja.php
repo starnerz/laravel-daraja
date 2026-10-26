@@ -30,7 +30,7 @@ Route::post('c2b/confirmation', [CallbackController::class, 'confirmation'])
 Route::post('c2b-hakikisha/token', [C2BHakikishaController::class, 'token'])
     ->name('daraja.c2b-hakikisha.token');
 
-Route::post('c2b-hakikisha/validation', [C2BHakikishaController::class, 'validate'])
+Route::post('c2b-hakikisha/validation', [C2BHakikishaController::class, 'validation'])
     ->name('daraja.c2b-hakikisha.validation');
 
 // {type} is echoed back on the event so one listener can serve every API.

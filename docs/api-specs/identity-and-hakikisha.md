@@ -1,5 +1,11 @@
 # Identity and Hakikisha APIs
 
+Source: the Daraja portal's Security tab, contributed in #10 (October 2026).
+Mobile Number Validation and SIM Swap below are the portal's own examples and
+are the test fixtures. **B2C Hakikisha's response and C2B Hakikisha's request
+and response shapes are not yet checked against the portal**; confirm them, and
+capture fixtures, before a release.
+
 These APIs require Safaricom to enable the product for the Daraja app. Mobile
 Number Validation is commercial and billed per request; B2C and C2B Hakikisha
 require partner onboarding. The APIs may not work in a default sandbox app.
@@ -297,6 +303,7 @@ With the default `daraja` route prefix, configure Safaricom to call:
 
 The token endpoint expects HTTP Basic authentication using the configured
 username and password. The validation endpoint expects that returned token as a
-Bearer token. The resolver receives the account number and shortcode and
+Bearer token, and checks it before anything else: without one it answers 401
+whatever the body. A malformed body then gets 422, an unknown account 400. The resolver receives the account number and shortcode and
 returns the account name, or `null` if the account is not found. Use a shared
 Laravel cache store when running multiple application instances.

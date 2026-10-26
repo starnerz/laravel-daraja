@@ -25,7 +25,7 @@ use Throwable;
 final class DarajaClient
 {
     /**
-     * Payload keys that must never reach the log.
+     * Payload keys that must never reach the log, at any depth.
      *
      * @var list<string>
      */
@@ -35,12 +35,9 @@ final class DarajaClient
         'InitiatorPassword',
         'consumer_key',
         'consumer_secret',
+        // Identity data from Mobile Number Validation and B2C Hakikisha. Phone
+        // numbers stay: listeners rely on them to match a payment to its prompt.
         'idNumber',
-        'msisdn',
-        'Msisdn',
-        'phoneNumber',
-        'PhoneNumber',
-        'customerNumber',
         'firstName',
         'middleName',
         'lastName',
