@@ -137,9 +137,9 @@ return [
     */
 
     'c2b_hakikisha' => [
-        'username' => env('DARAJA_C2B_HAKISHA_USERNAME'),
-        'password' => env('DARAJA_C2B_HAKISHA_PASSWORD'),
-        'token_ttl' => (int) env('DARAJA_C2B_HAKISHA_TOKEN_TTL', 3599),
+        'username' => env('DARAJA_C2B_HAKIKISHA_USERNAME'),
+        'password' => env('DARAJA_C2B_HAKIKISHA_PASSWORD'),
+        'token_ttl' => (int) env('DARAJA_C2B_HAKIKISHA_TOKEN_TTL', 3599),
     ],
 
     /*

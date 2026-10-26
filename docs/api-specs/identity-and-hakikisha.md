@@ -65,9 +65,9 @@ credentials:
 
 ```dotenv
 DARAJA_ROUTES_ENABLED=true
-DARAJA_C2B_HAKISHA_USERNAME=partner-user
-DARAJA_C2B_HAKISHA_PASSWORD=change-this-secret
-DARAJA_C2B_HAKISHA_TOKEN_TTL=3599
+DARAJA_C2B_HAKIKISHA_USERNAME=partner-user
+DARAJA_C2B_HAKIKISHA_PASSWORD=change-this-secret
+DARAJA_C2B_HAKIKISHA_TOKEN_TTL=3599
 ```
 
 Register an account resolver in an application service provider:

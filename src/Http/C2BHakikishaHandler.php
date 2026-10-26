@@ -44,6 +44,7 @@ final class C2BHakikishaHandler
 
     /**
      * @return array{0: array<string, mixed>, 1: int}
+     *
      * @throws RandomException
      */
     public function issueToken(?string $authorization, ?string $grantType): array
@@ -79,9 +80,10 @@ final class C2BHakikishaHandler
     }
 
     /**
-     * @param array<string, mixed> $payload
-     * @param Closure(string, string): (?string)|null $resolveAccountName
+     * @param  array<string, mixed>  $payload
+     * @param  Closure(string, string): (?string)|null  $resolveAccountName
      * @return array{0: array<string, mixed>, 1: int}
+     *
      * @throws InvalidArgumentException
      */
     public function validate(

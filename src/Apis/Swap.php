@@ -12,7 +12,7 @@ use Starnerz\LaravelDaraja\Support\PhoneNumber;
  */
 final class Swap extends Api
 {
-    private const ENDPOINT = 'imsi/v2/checkATI';
+    private const string ENDPOINT = 'imsi/v2/checkATI';
 
     public function query(string $phone): SwapResponse
     {

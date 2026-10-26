@@ -76,7 +76,7 @@ final class DarajaClient
      * A pre-authenticated request against the configured Daraja host, for
      * endpoints that need options this client does not expose.
      */
-    public function pendingRequest(): HttpFactory
+    public function pendingRequest(): PendingRequest
     {
         $http = $this->config->get('laravel-daraja.http');
 
