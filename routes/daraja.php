@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
+use Starnerz\LaravelDaraja\Http\Controllers\C2BHakikishaController;
 use Starnerz\LaravelDaraja\Http\Controllers\CallbackController;
 
 /*
@@ -25,6 +26,12 @@ Route::post('c2b/validation', [CallbackController::class, 'validation'])
 
 Route::post('c2b/confirmation', [CallbackController::class, 'confirmation'])
     ->name('daraja.c2b.confirmation');
+
+Route::post('c2b-hakikisha/token', [C2BHakikishaController::class, 'token'])
+    ->name('daraja.c2b-hakikisha.token');
+
+Route::post('c2b-hakikisha/validation', [C2BHakikishaController::class, 'validate'])
+    ->name('daraja.c2b-hakikisha.validation');
 
 // {type} is echoed back on the event so one listener can serve every API.
 Route::post('result/{type}', [CallbackController::class, 'result'])

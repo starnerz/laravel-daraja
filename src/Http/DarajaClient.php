@@ -35,6 +35,15 @@ final class DarajaClient
         'InitiatorPassword',
         'consumer_key',
         'consumer_secret',
+        'idNumber',
+        'msisdn',
+        'Msisdn',
+        'phoneNumber',
+        'PhoneNumber',
+        'customerNumber',
+        'firstName',
+        'middleName',
+        'lastName',
     ];
 
     public function __construct(
@@ -67,7 +76,7 @@ final class DarajaClient
      * A pre-authenticated request against the configured Daraja host, for
      * endpoints that need options this client does not expose.
      */
-    public function pendingRequest(): PendingRequest
+    public function pendingRequest(): HttpFactory
     {
         $http = $this->config->get('laravel-daraja.http');
 
@@ -181,9 +190,11 @@ final class DarajaClient
      */
     private function redact(array $data): array
     {
-        foreach (self::REDACTED as $key) {
-            if (array_key_exists($key, $data)) {
+        foreach ($data as $key => $value) {
+            if (is_string($key) && in_array($key, self::REDACTED, true)) {
                 $data[$key] = '[redacted]';
+            } elseif (is_array($value)) {
+                $data[$key] = $this->redact($value);
             }
         }
 

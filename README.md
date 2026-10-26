@@ -1,7 +1,7 @@
 # Laravel Daraja
 
-Every Safaricom M-Pesa Daraja API, as ordinary Laravel code. Seventeen APIs —
-STK Push, C2B, B2C, B2B, Dynamic QR, M-Pesa Ratiba, Bill Manager and the rest —
+Safaricom M-Pesa Daraja APIs, as ordinary Laravel code. More than twenty APIs —
+STK Push, C2B, B2C, B2B, Dynamic QR, M-Pesa Ratiba, Hakikisha and the rest —
 with typed responses, cached tokens, and callbacks you can actually test.
 
 📖 **[Documentation: laraveldaraja.com](https://laraveldaraja.com/)** — new here? Start with the
@@ -79,6 +79,11 @@ prove arrived:
 | [Dynamic QR](https://laraveldaraja.com/apis/dynamic-qr/) | [Business to Business](https://laraveldaraja.com/apis/b2b/) | [Reversal](https://laraveldaraja.com/apis/account-services/) |
 | [M-Pesa Ratiba](https://laraveldaraja.com/apis/standing-orders/) | [B2B Express Checkout](https://laraveldaraja.com/apis/b2b/) | [Pull Transactions](https://laraveldaraja.com/apis/pull-transactions/) |
 | [Lipa na Bonga](https://laraveldaraja.com/apis/lipa-na-bonga/) | | [Bill Manager](https://laraveldaraja.com/apis/bill-manager/) |
+
+Identity and account verification APIs include Mobile Number Validation,
+SIM-swap checks, B2C Hakikisha recipient verification, and the receiver-side
+C2B Hakikisha account-name lookup. See [their API reference](docs/api-specs/identity-and-hakikisha.md)
+for onboarding requirements and route setup.
 
 Every call and endpoint: [API overview](https://laraveldaraja.com/apis/overview/).
 

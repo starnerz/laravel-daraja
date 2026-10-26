@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Starnerz\LaravelDaraja\Enums\MobileIdType;
 use Starnerz\LaravelDaraja\Events\DarajaRequestSending;
 use Starnerz\LaravelDaraja\Events\DarajaResponseReceived;
 use Starnerz\LaravelDaraja\Exceptions\ApiRequestException;
@@ -47,6 +48,50 @@ it('keeps secrets out of the request event', function () {
         // The STK password is derived from the passkey, so it must never be
         // persisted by a listener recording this event.
         expect($event->payload['Password'])->toBe('[redacted]');
+
+        return true;
+    });
+});
+
+it('redacts identity data and nested customer names from request and response events', function () {
+    Event::fake([DarajaRequestSending::class, DarajaResponseReceived::class]);
+    fakeDaraja([
+        '*/KYC-validation/validateID' => Http::response([
+            'responseCode' => '4000',
+            'status' => true,
+        ]),
+        '*/mpesa/b2c/hakikisha/v1/hakikisha' => Http::response([
+            'header' => ['status' => '200'],
+            'body' => [
+                'firstName' => 'Jane',
+                'middleName' => 'Mary',
+                'lastName' => 'Doe',
+            ],
+        ]),
+    ]);
+
+    Daraja::mobileNumberValidation()->validate('0712345678', MobileIdType::NationalId, '12345678');
+    Daraja::b2cHakikisha()->validate('0712345678');
+
+    Event::assertDispatched(DarajaRequestSending::class, function (DarajaRequestSending $event): bool {
+        if (! str_contains($event->endpoint, 'KYC-validation')) {
+            return false;
+        }
+
+        expect($event->payload['msisdn'])->toBe('[redacted]')
+            ->and($event->payload['idNumber'])->toBe('[redacted]');
+
+        return true;
+    });
+
+    Event::assertDispatched(DarajaResponseReceived::class, function (DarajaResponseReceived $event): bool {
+        if (! str_contains($event->endpoint, 'b2c/hakikisha')) {
+            return false;
+        }
+
+        expect($event->body['body']['firstName'])->toBe('[redacted]')
+            ->and($event->body['body']['middleName'])->toBe('[redacted]')
+            ->and($event->body['body']['lastName'])->toBe('[redacted]');
 
         return true;
     });

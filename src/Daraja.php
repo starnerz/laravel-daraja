@@ -13,15 +13,19 @@ use Starnerz\LaravelDaraja\Apis\AccountBalance;
 use Starnerz\LaravelDaraja\Apis\B2B;
 use Starnerz\LaravelDaraja\Apis\B2BExpressCheckout;
 use Starnerz\LaravelDaraja\Apis\B2C;
+use Starnerz\LaravelDaraja\Apis\B2CHakikisha;
 use Starnerz\LaravelDaraja\Apis\BillManager;
 use Starnerz\LaravelDaraja\Apis\C2B;
 use Starnerz\LaravelDaraja\Apis\DynamicQr;
 use Starnerz\LaravelDaraja\Apis\LipaNaBonga;
+use Starnerz\LaravelDaraja\Apis\MobileNumberValidation;
 use Starnerz\LaravelDaraja\Apis\MpesaExpress;
 use Starnerz\LaravelDaraja\Apis\PullTransactions;
 use Starnerz\LaravelDaraja\Apis\Reversal;
 use Starnerz\LaravelDaraja\Apis\StandingOrder;
+use Starnerz\LaravelDaraja\Apis\Swap;
 use Starnerz\LaravelDaraja\Apis\TransactionStatus;
+use Starnerz\LaravelDaraja\Http\C2BHakikishaHandler;
 use Starnerz\LaravelDaraja\Http\DarajaClient;
 use Starnerz\LaravelDaraja\Http\TokenRepository;
 use Starnerz\LaravelDaraja\Support\CallbackUrl;
@@ -75,6 +79,26 @@ final class Daraja
     }
 
     /**
+     * Register the account-name lookup used by the C2B Hakikisha receiver.
+     *
+     * Return null when the account number does not belong to the shortcode.
+     *
+     * @param  Closure(string, string): (?string)  $callback
+     */
+    public function resolveC2BAccountUsing(Closure $callback): void
+    {
+        $this->app->make(C2BHakikishaHandler::class)->resolveAccountUsing($callback);
+    }
+
+    /**
+     * @return (Closure(string, string): (?string))|null
+     */
+    public function c2bAccountResolver(): ?Closure
+    {
+        return $this->app->make(C2BHakikishaHandler::class)->accountResolver();
+    }
+
+    /**
      * M-Pesa Express (STK Push).
      */
     public function stk(): MpesaExpress
@@ -88,6 +112,30 @@ final class Daraja
     public function c2b(): C2B
     {
         return $this->make(C2B::class);
+    }
+
+    /**
+     * Check a mobile number against the holder's identity document.
+     */
+    public function mobileNumberValidation(): MobileNumberValidation
+    {
+        return $this->make(MobileNumberValidation::class);
+    }
+
+    /**
+     * Check the date of a customer's most recent SIM swap.
+     */
+    public function simSwap(): Swap
+    {
+        return $this->make(Swap::class);
+    }
+
+    /**
+     * Verify a recipient's name before making a B2C payout.
+     */
+    public function b2cHakikisha(): B2CHakikisha
+    {
+        return $this->make(B2CHakikisha::class);
     }
 
     /**

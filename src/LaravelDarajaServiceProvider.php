@@ -10,6 +10,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Starnerz\LaravelDaraja\Commands\RegisterC2BUrls;
 use Starnerz\LaravelDaraja\Commands\ShowAccessToken;
 use Starnerz\LaravelDaraja\Commands\ShowSecurityCredential;
+use Starnerz\LaravelDaraja\Http\C2BHakikishaHandler;
 use Starnerz\LaravelDaraja\Http\DarajaClient;
 use Starnerz\LaravelDaraja\Http\TokenRepository;
 use Starnerz\LaravelDaraja\Support\CallbackUrl;
@@ -38,6 +39,7 @@ class LaravelDarajaServiceProvider extends PackageServiceProvider
         $this->app->singleton(SecurityCredential::class);
         $this->app->singleton(TokenRepository::class);
         $this->app->singleton(DarajaClient::class);
+        $this->app->singleton(C2BHakikishaHandler::class);
 
         // Scoped rather than a singleton: Daraja reads configuration through the
         // container at call time, and under Octane a singleton would keep the

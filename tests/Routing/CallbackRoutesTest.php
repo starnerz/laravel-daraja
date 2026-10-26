@@ -13,6 +13,8 @@ use Starnerz\LaravelDaraja\Facades\Daraja;
 
 beforeEach(function () {
     Event::fake();
+    config()->set('laravel-daraja.c2b_hakikisha.username', 'partner');
+    config()->set('laravel-daraja.c2b_hakikisha.password', 'secret');
 });
 
 it('turns an STK callback into an event', function () {
@@ -137,4 +139,65 @@ it('allows every address when no allow list is configured', function () {
     $request->server->set('REMOTE_ADDR', '203.0.113.9');
 
     expect($middleware->handle($request, fn ($r) => response('ok'))->getContent())->toBe('ok');
+});
+
+it('issues a C2B Hakikisha token to a configured partner', function () {
+    $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->assertOk()
+        ->assertJsonStructure(['access_token', 'expires_in']);
+});
+
+it('rejects invalid C2B Hakikisha client credentials', function () {
+    $this->withHeader('Authorization', 'Basic '.base64_encode('partner:wrong'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->assertUnauthorized()
+        ->assertJson(['error' => 'unauthorized']);
+});
+
+it('resolves a C2B Hakikisha account name for an authenticated request', function () {
+    Daraja::resolveC2BAccountUsing(
+        fn (string $accountNumber, string $shortcode): ?string => $accountNumber === '66925336'
+            && $shortcode === '415010'
+            ? 'Money Market Account'
+            : null,
+    );
+
+    $tokenResponse = $this->withHeader('Authorization', 'Basic '.base64_encode('partner:secret'))
+        ->postJson('daraja/c2b-hakikisha/token?grant_type=client_credentials')
+        ->assertOk();
+
+    $this->withHeader('Authorization', 'Bearer '.$tokenResponse->json('access_token'))
+        ->postJson('daraja/c2b-hakikisha/validation', [
+            'requestId' => 'request-1',
+            'timestamp' => '1793000000',
+            'accountNumber' => '66925336',
+            'shortcode' => '415010',
+        ])
+        ->assertOk()
+        ->assertJson([
+            'requestId' => 'request-1',
+            'accountName' => 'Money Market Account',
+            'accountNumber' => '66925336',
+            'shortcode' => '415010',
+        ]);
+});
+
+it('rejects an invalid C2B Hakikisha access token', function () {
+    $this->withHeader('Authorization', 'Bearer invalid')
+        ->postJson('daraja/c2b-hakikisha/validation', [
+            'requestId' => 'request-1',
+            'timestamp' => '1793000000',
+            'accountNumber' => '66925336',
+            'shortcode' => '415010',
+        ])
+        ->assertUnauthorized()
+        ->assertJson(['errorMessage' => 'Invalid access token.']);
+});
+
+it('rejects malformed C2B Hakikisha validation requests', function () {
+    $this->withHeader('Authorization', 'Bearer any')
+        ->postJson('daraja/c2b-hakikisha/validation', ['requestId' => 'request-1'])
+        ->assertStatus(422)
+        ->assertJson(['requestId' => 'request-1']);
 });

@@ -127,6 +127,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | C2B Hakikisha Receiver
+    |--------------------------------------------------------------------------
+    |
+    | Safaricom calls the package routes to obtain a short-lived access token
+    | and resolve the account name for a C2B payment. Configure these client
+    | credentials in Safaricom's partner portal and register the package URLs.
+    |
+    */
+
+    'c2b_hakikisha' => [
+        'username' => env('DARAJA_C2B_HAKISHA_USERNAME'),
+        'password' => env('DARAJA_C2B_HAKISHA_PASSWORD'),
+        'token_ttl' => (int) env('DARAJA_C2B_HAKISHA_TOKEN_TTL', 3599),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | M-Pesa Express (STK Push)
     |--------------------------------------------------------------------------
     |
@@ -224,8 +241,8 @@ return [
     | Logging
     |--------------------------------------------------------------------------
     |
-    | When enabled, every Daraja request and response is logged. Credentials
-    | and security credentials are redacted before anything is written.
+    | When enabled, every Daraja request and response is logged. Credentials,
+    | phone numbers, identity numbers and Hakikisha customer names are redacted.
     | Leave "channel" null to use your application's default channel.
     |
     */

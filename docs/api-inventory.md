@@ -3,9 +3,9 @@
 Source: <https://developer.safaricom.co.ke/dashboard/apis> (authenticated dashboard),
 walked page by page on 15 August 2026.
 
-**Scope agreed:** Payments + Disbursement + Experience tabs, excluding Tax
-Remittance, Mobile Data Bundles and IoT SIM Management, and excluding the
-Security-tab identity APIs (Swap, IMSI, Mobile Number Validation, Age on Network).
+**Scope:** Payments, Disbursement, Experience, and selected Security APIs.
+Tax Remittance, Mobile Data Bundles, IoT SIM Management, IMSI and Age on Network
+remain out of scope.
 
 ## Implemented
 
@@ -29,6 +29,10 @@ Security-tab identity APIs (Swap, IMSI, Mobile Number Validation, Age on Network
 | Pull Transactions | `PullTransaction` | `pulltransactions/v1/register`, `/query` | `Apis\PullTransactions` |
 | Lipa na Bonga | `LipaNaBonga` | `v1/lipa/na/bonga/calculate-points`, `/redeem-paybill` | `Apis\LipaNaBonga` |
 | Bill Manager | `BillManager` | `v1/billmanager-invoice/*` (7 endpoints) | `Apis\BillManager` |
+| Mobile Number Validation | `MobileNumberValidation` | `v1/KYC-validation/validateID` | `Apis\MobileNumberValidation::validate()` |
+| Swap | `Swap` | `imsi/v2/checkATI` | `Apis\Swap::query()` |
+| B2C Hakikisha | `B2CHakikisha` | `mpesa/b2c/hakikisha/v1/hakikisha` | `Apis\B2CHakikisha::validate()` |
+| C2B Hakikisha | `C2BHakikisha` | Partner-hosted token and validation routes | `Http\C2BHakikishaHandler` |
 
 ## Blocked
 
@@ -39,8 +43,7 @@ Security-tab identity APIs (Swap, IMSI, Mobile Number Validation, Age on Network
 ## Excluded by scope
 
 Tax Remittance (`TaxRemittance`), Mobile Data Bundles (`MobileCenter`), IoT SIM
-Management (`IotSimManagement`), Swap (`Swap`), IMSI (`IMSI`), Mobile Number
-Validation (`MobileNumberValidation`), Age on Network (`AgeOnNetwork`),
+Management (`IotSimManagement`), IMSI (`IMSI`), Age on Network (`AgeOnNetwork`),
 Getting Started (`GettingStarted`, a guide rather than an API).
 
 ## Defects the portal caught in code written before this sweep
