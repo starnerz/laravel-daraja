@@ -6,7 +6,9 @@ require partner onboarding. The APIs may not work in a default sandbox app.
 
 ## Mobile Number Validation
 
-Check whether a Safaricom number is registered to an identity document:
+Check in real time whether a Safaricom mobile number is registered to the
+supplied identity document. The API compares the MSISDN, ID type, and ID
+number, returning a match or mismatch result.
 
 ```php
 use Starnerz\LaravelDaraja\Enums\MobileIdType;
@@ -16,6 +18,8 @@ $result = Daraja::mobileNumberValidation()->validate(
     phone: '0712345678',
     idType: MobileIdType::NationalId,
     idNumber: '12345678',
+    shortCode: '776700',
+    requestRefId: '83a2-4b44-aaffcb3f93',
 );
 
 if ($result->matches()) {
@@ -24,8 +28,117 @@ if ($result->matches()) {
 ```
 
 Supported ID types are `NationalId` (`01`), `MilitaryId` (`02`) and `Passport`
-(`05`). The shortcode defaults to `laravel-daraja.initiator.short_code`. A
-request reference is generated if one is not supplied.
+(`05`). The phone is normalized to international format (`254...`) before it
+is sent. The shortcode defaults to `laravel-daraja.initiator.short_code`; a
+unique request reference is generated if one is not supplied. The package
+obtains the Daraja access token and makes the synchronous request.
+
+### Access and onboarding
+
+This is a commercial API. Request onboarding through
+`apisupport@safaricom.co.ke` or your Safaricom account manager. Safaricom
+requires a signed commercial agreement before enabling production access.
+
+To prepare for testing, create a Daraja developer account and sandbox app, then
+configure the app's consumer key and secret as described in
+[Configuration](https://laraveldaraja.com/getting-started/configuration/).
+The developer portal simulator provides test data. For go-live, Safaricom
+requires a live M-Pesa PayBill or Till number with Business Admin/Manager
+operators created.
+
+| Environment | Endpoint |
+|---|---|
+| Sandbox | `https://sandbox.safaricom.co.ke/v1/KYC-validation/validateID` |
+| Production | `https://api.safaricom.co.ke/v1/KYC-validation/validateID` |
+
+The API can be consumed over the internet, a virtual private network, or a
+Multiprotocol Switch, subject to Safaricom's onboarding and connectivity
+requirements.
+
+### Request and response
+
+The request includes a unique merchant-generated reference, the organization's
+shortcode, a 12-digit MSISDN, ID type, and ID number:
+
+```json
+{
+  "requestRefID": "83a2-4b44-aaffcb3f93",
+  "shortCode": "776700",
+  "msisdn": "254710860780",
+  "idType": "01",
+  "idNumber": "454353453"
+}
+```
+
+`Daraja::mobileNumberValidation()->validate()` generates `requestRefID` when
+omitted and normalizes the phone number.
+
+Match:
+
+```json
+{
+  "responseRefID": "1771929697",
+  "responseCode": "4000",
+  "responseMessage": "Details match successfully",
+  "status": "true"
+}
+```
+
+Mismatch:
+
+```json
+{
+  "responseRefID": "1771929733",
+  "responseCode": "4001",
+  "responseMessage": "Details do not match",
+  "status": "false"
+}
+```
+
+Use `$result->matches()` for the boolean outcome. The response reference and
+message are available as `responseRefId` and `responseMessage`.
+
+### Commercial charges
+
+Safaricom lists the following monthly call rates in KES. The published
+volume bands contain apparent boundary typos; confirm the applicable band
+with Safaricom when agreeing commercial terms.
+
+| Calls per month | KES per call |
+|---|---:|
+| 0–200,000 | 4.50 |
+| 200,001–500,000 | 4.28 |
+| 500,001–1,000,000 | 3.94 |
+| 1,000,001–5,000,000 | 3.60 |
+| More than 5,000,000 | 3.15 |
+
+### Errors
+
+Errors use an API-gateway response with `errorCode` and `errorMessage`, for
+example:
+
+```json
+{
+  "responseId": "83a2-aa8bfffcb3f939",
+  "errorCode": "403.001",
+  "errorMessage": "subscription_not_available"
+}
+```
+
+| Code | Meaning |
+|---|---|
+| `403.001` | Subscription not available; the API may not be enabled for the partner |
+| `400` | Bad request, such as an invalid MSISDN |
+| `401.001` | Invalid access token |
+| `500` | Invalid parameter input |
+
+### Audience and use cases
+
+The API is intended for financial institutions, digital payment providers and
+fintechs, digital lenders, insurers, gaming businesses, integrators, and
+developers. Typical uses include digital onboarding, user authentication,
+fraud prevention, and risk analysis. Treat the match result as an identity
+verification signal within the partner's broader decision process.
 
 ## SIM Swap
 
