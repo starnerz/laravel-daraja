@@ -213,3 +213,20 @@ it('supports GET requests through the client', function () {
     Http::assertSent(fn ($request) => ! str_contains($request->url(), 'mpesa/lookup')
         || str_contains($request->url(), 'id=7'));
 });
+
+it('fails the register command when Safaricom rejects the registration', function () {
+    fakeDaraja([
+        '*/mpesa/c2b/*/registerurl' => Http::response([
+            'OriginatorCoversationID' => '7619-37765134-2',
+            'ResponseCode' => '1',
+            'ResponseDescription' => 'Short code not allowed',
+        ]),
+    ]);
+
+    $this->artisan('daraja:register-urls', [
+        '--confirmation' => 'https://example.test/daraja/confirm',
+        '--validation' => 'https://example.test/daraja/validate',
+    ])
+        ->expectsOutputToContain('Short code not allowed')
+        ->assertFailed();
+});
