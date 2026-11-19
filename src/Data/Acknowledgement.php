@@ -40,8 +40,12 @@ final readonly class Acknowledgement
         );
     }
 
+    /**
+     * Safaricom writes success as "0" on most endpoints but as "00000000" on
+     * C2B URL registration (seen 19 Nov 2026), so any run of zeros counts.
+     */
     public function accepted(): bool
     {
-        return $this->responseCode === '0';
+        return preg_match('/^0+$/', $this->responseCode) === 1;
     }
 }

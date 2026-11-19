@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Starnerz\LaravelDaraja\Data\Acknowledgement;
 use Starnerz\LaravelDaraja\Exceptions\ConfigurationException;
 use Starnerz\LaravelDaraja\Exceptions\DarajaException;
 use Starnerz\LaravelDaraja\Facades\Daraja;
@@ -38,6 +39,24 @@ it('registers the configured callback urls', function () {
 
         return true;
     });
+});
+
+it('reads any run of zeros as an accepted acknowledgement', function (string $code, bool $accepted) {
+    $acknowledgement = Acknowledgement::fromArray(['ResponseCode' => $code]);
+
+    expect($acknowledgement->accepted())->toBe($accepted);
+})->with([
+    'simulate and most endpoints' => ['0', true],
+    'C2B URL registration' => ['00000000', true],
+    'a rejection' => ['1', false],
+    'a code ending in zero' => ['10', false],
+    'an empty code' => ['', false],
+]);
+
+it('reports a successful registration from the command', function () {
+    $this->artisan('daraja:register-urls')
+        ->expectsOutputToContain('C2B URLs registered successfully.')
+        ->assertSuccessful();
 });
 
 it('resolves a route name into an absolute url', function () {
